@@ -27,11 +27,13 @@ class CNC:
 		return "\n".join([com2gcode(x) for x in self.__code])
 
 	def G0(self, X=None, Y=None, Z=None):
-		self.__append("G0", [('X', X), ('Y', Y), ('Z', Z)])
+		self.__append("G0", {'X': X, 'Y': Y, 'Z': Z})
 
 	def G1(self, X=None, Y=None, Z=None):
-		self.__append("G1", [('X', X), ('Y', Y), ('Z', Z)])
+		self.__append("G1", {'X': X, 'Y': Y, 'Z': Z})
 
+	def as_is(self):
+		return self.__code
 	
 	@property
 	def safe_z(self):

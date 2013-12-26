@@ -1,2 +1,4 @@
-from py2gcode import *
-from cnc import *
+from main import *
+from utils import *
+#from cnc import *
+#from viewer import *

@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"r",
+				"rot_x"
+			],
+			[
+				"sc",
+				"scroll_x"
+			],
+			[
+				"las",
+				"last_x"
+			],
+			[
+				"rot",
+				"rot_y"
+			],
+			[
+				"point",
+				"Point"
+			],
+			[
+				"last",
+				"last_y"
+			],
+			[
+				"size",
+				"size_y"
+			],
+			[
+				"scro",
+				"scroll_y"
+			],
+			[
 				"w",
 				"wrapped"
 			],
@@ -115,7 +147,23 @@
 			"file": "example.py",
 			"settings":
 			{
-				"buffer_size": 368,
+				"buffer_size": 389,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py2gcode/viewer.py",
+			"settings":
+			{
+				"buffer_size": 5440,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py2gcode/main.py",
+			"settings":
+			{
+				"buffer_size": 788,
 				"line_ending": "Windows"
 			}
 		},
@@ -123,7 +171,7 @@
 			"file": "py2gcode/py2gcode.py",
 			"settings":
 			{
-				"buffer_size": 444,
+				"buffer_size": 788,
 				"line_ending": "Windows"
 			}
 		},
@@ -131,7 +179,7 @@
 			"file": "py2gcode/cnc.py",
 			"settings":
 			{
-				"buffer_size": 1294,
+				"buffer_size": 1321,
 				"line_ending": "Windows"
 			}
 		},
@@ -254,6 +302,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"py2gcode",
+			"programm",
+			"points",
+			"__poin",
+			"		sx += self.scroll_x\n		sy += self.scroll_y\n",
+			"2D",
 			"inde",
 			"exec",
 			"run",
@@ -285,15 +339,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 368,
+						"buffer_size": 389,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								95,
-								95
+								342,
+								342
 							]
 						],
 						"settings":
@@ -308,19 +362,46 @@
 				},
 				{
 					"buffer": 1,
-					"file": "py2gcode/py2gcode.py",
+					"file": "py2gcode/viewer.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 444,
+						"buffer_size": 5440,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								23,
-								0
+								2283,
+								2283
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1083.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "py2gcode/main.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 788,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								108,
+								108
 							]
 						],
 						"settings":
@@ -335,20 +416,48 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "py2gcode/cnc.py",
+					"buffer": 3,
+					"file": "py2gcode/py2gcode.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1294,
+						"buffer_size": 788,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1164,
-								1164
+								519,
+								519
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "py2gcode/cnc.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1321,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								920,
+								920
 							]
 						],
 						"settings":
@@ -363,7 +472,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 5,
 					"file": "py2gcode/utils.py",
 					"semi_transient": false,
 					"settings":
@@ -425,7 +534,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 330.0
+		"height": 249.0
 	},
 	"output.unsaved_changes":
 	{
