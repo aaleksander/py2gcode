@@ -1,0 +1,476 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"w",
+				"wrapped"
+			],
+			[
+				"comm",
+				"commands"
+			],
+			[
+				"comman",
+				"command_value"
+			],
+			[
+				"py2",
+				"py2GCode"
+			],
+			[
+				"lo",
+				"lo_byte"
+			],
+			[
+				"argument",
+				"argument_position"
+			],
+			[
+				"argu",
+				"argument_position"
+			],
+			[
+				"func",
+				"func_code"
+			],
+			[
+				"LOAD",
+				"LOAD_CONST"
+			],
+			[
+				"oper",
+				"operation_name"
+			],
+			[
+				"operation",
+				"operation_name"
+			],
+			[
+				"co",
+				"co_code"
+			],
+			[
+				"fun",
+				"func_code"
+			],
+			[
+				"d",
+				"dis"
+			],
+			[
+				"att",
+				"line_attribs"
+			],
+			[
+				"bu",
+				"bufferSize"
+			],
+			[
+				"line",
+				"nativeLineSeparatorString"
+			],
+			[
+				"spl",
+				"splitLines"
+			],
+			[
+				"splitlines",
+				"stringSplitLines"
+			],
+			[
+				"st",
+				"string"
+			],
+			[
+				"re",
+				"result"
+			],
+			[
+				"Get",
+				"GetNum"
+			],
+			[
+				"A",
+				"ALONSO"
+			],
+			[
+				"f",
+				"foo"
+			],
+			[
+				"uni",
+				"unittest"
+			],
+			[
+				"s",
+				"stdio"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "example.py",
+			"settings":
+			{
+				"buffer_size": 368,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py2gcode/py2gcode.py",
+			"settings":
+			{
+				"buffer_size": 444,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py2gcode/cnc.py",
+			"settings":
+			{
+				"buffer_size": 1294,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py2gcode/utils.py",
+			"settings":
+			{
+				"buffer_size": 135,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "Packages/Python/Python.sublime-build",
+	"command_palette":
+	{
+		"height": 380.0,
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 193.0,
+		"history":
+		[
+			"build",
+			"main",
+			"main.exe",
+			"make",
+			"exec(\"dmd.exe\")",
+			"exec(\"dmd\")",
+			"exec",
+			"exec dmd",
+			"dmd",
+			"dmd -unittest main.d",
+			"-unittest",
+			"cd d:",
+			"dir()",
+			"dir",
+			"?",
+			"main.d",
+			"exec(\"main.d\")",
+			"exec(main)",
+			"exec();",
+			"exec()",
+			"exec",
+			"exec()",
+			"exec",
+			"build",
+			"main.exe",
+			"main",
+			"help",
+			"?",
+			"run"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2LinuxCNC/tests.py",
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2LinuxCNC/py2gcode/codes.py",
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2LinuxCNC/py2gcode/py2gcode.py",
+		"/D/Aleksander/dev/D/TestConsole/TestConsole/sublime.sublime-project",
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2LinuxCNC/test.py",
+		"/D/Aleksander/dev/Python/MoveMe/Samples/ConnectedBoxes.py",
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2LinuxCNC/py2GCode.py",
+		"/D/Aleksander/Разное/blender 2.69/2.69/scripts/addons/CNC/misc.py",
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/linuxcnc-features/features.py",
+		"/C/Users/anufrievaa/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/anufrievaa/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/test.py",
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/pyCNC/test.py",
+		"/D/Aleksander/dev/Blender/CNC/CNC/__init__.py",
+		"/D/Aleksander/dev/D/Xml2GCode/Xml2GCode/main.d",
+		"/D/Aleksander/dev/D/Xml2DCode/main.d",
+		"/D/Aleksander/dev/Haskell/test/main.hs",
+		"/D/Aleksander/dev/Haskell/test/Drawing.hs",
+		"/D/Aleksander/dev/Haskell/test.hs",
+		"/C/Program Files (x86)/Inkscape/share/extensions/hello.py",
+		"/C/Program Files (x86)/Inkscape/share/extensions/hello.inx",
+		"/D/Aleksander/dev/D/TestConsole/TestConsole/main.d",
+		"/C/D/dmd2/samples/d/mydll/mydll.d",
+		"/C/D/dmd2/samples/d/mydll/test.d",
+		"/D/Aleksander/dev/D/winapi/main.d",
+		"/C/D/dmd2/src/dfl/dfl/socket.d",
+		"/C/D/dmd2/src/dfl/dfl/internal/dlib.d",
+		"/C/D/dmd2/src/dfl/dfl/internal/utf.d",
+		"/C/D/dfl/packages/dfl/examples/d2/helloworld.d",
+		"/C/D/dmd2/src/dgui/dgui/all.d",
+		"/D/Aleksander/Install/D/dgui-dgui-e723f0d03198/dgui_samples/hello.d",
+		"/C/Users/anufrievaa/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/D/dmd2/src/dgui/dgui/core/controls/control.d",
+		"/D/Aleksander/dev/D/DForce/main.d",
+		"/D/Aleksander/dev/D/DForce/Math/Tools.d",
+		"/C/Users/anufrievaa/AppData/Roaming/Sublime Text 3/Packages/Default/Default (Windows).sublime-keymap",
+		"/C/Users/anufrievaa/AppData/Roaming/Sublime Text 3/Packages/User/Plain text.sublime-settings"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"inde",
+			"exec",
+			"run",
+			"ctrl+b",
+			"lang"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "example.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 368,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								95,
+								95
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "py2gcode/py2gcode.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 444,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								23,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "py2gcode/cnc.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1294,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1164,
+								1164
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 225.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "py2gcode/utils.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 135,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								72,
+								72
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 330.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 255.0
+	},
+	"project": "/D/Aleksander/dev/D/TestConsole/TestConsole/sublime.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
