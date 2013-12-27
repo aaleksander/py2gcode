@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
+#подключаем библиотеку
 from py2gcode import *
 
-def dril(x, y):
-	pass
+def drill(x, y):
+	G0(X=x, Y=y, Z=-1)
+	for z in xrange(0, 10):
+		circle(x, y, z, 2)	
+	G0(Z=-20)
 
 def cut(x1, y1, x2, y2, z1, z2, step):
 	'прорезает щель с постепенным погружением'
@@ -14,6 +18,7 @@ def cut(x1, y1, x2, y2, z1, z2, step):
 		G1(Z = z + step)
 		G1(x1, y1)
 
+#вырежем решетку
 def f():
 	G0(X=0, Y=0, Z=-20)
 	for z in xrange(0, 10, 3):
@@ -25,7 +30,9 @@ def f():
 		G0(X=x, Y=10, Z=-5)
 		cut(x, 10, x, 50, 0, 10, 1)
 		G0(Z = -5)
+	drill(10, 10)
+	drill(90, 10)
+	drill(90, 60)
+	drill(10, 60)
 
 preview(f)
-#export(f, "rrr,nc")
-
