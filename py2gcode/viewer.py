@@ -69,7 +69,7 @@ class Viewer:
 		self.scroll_x = 0
 		self.scroll_y = 0
 
-		self._zoom = 30
+		self._zoom = 70
 
 		#размеры холста
 		self.size_x = 640
@@ -241,6 +241,7 @@ class Viewer:
 			p.append(tmp.Y)
 		#рисуем оставшиеся линии
 		self.c.create_line(p, tags="theline", fill=curr_type)
+		print self._zoom	
 
 	def to_2D(self, p):
 		x = p.X - self.shift_x # + self.scroll_x
@@ -258,8 +259,8 @@ class Viewer:
 #		print "zoom: ", self._zoom, "a_x: ", self.rot_x, "a_y: ", self.rot_y
 		zzz = 300		
 
-		sx = self.size_x/2 + tmp.X*zzz/(tmp.Z + zzz)/(self._zoom/100.)
-		sy = self.size_y/2 + tmp.Y*zzz/(tmp.Z + zzz)/(self._zoom/100.)
+		sx = self.size_x/2 + tmp.X*zzz/(tmp.Z + zzz)/(self._zoom/300.)
+		sy = self.size_y/2 + tmp.Y*zzz/(tmp.Z + zzz)/(self._zoom/300.)
 
 		sx += self.scroll_x
 		sy += self.scroll_y

@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"shift_",
+				"shift_y"
+			],
+			[
+				"shi",
+				"shift_x"
+			],
+			[
 				"r",
 				"rot_x"
 			],
@@ -144,18 +152,10 @@
 	"buffers":
 	[
 		{
-			"file": "example.py",
+			"file": "reshetka.py",
 			"settings":
 			{
-				"buffer_size": 389,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "py2gcode/viewer.py",
-			"settings":
-			{
-				"buffer_size": 5440,
+				"buffer_size": 1223,
 				"line_ending": "Windows"
 			}
 		},
@@ -163,7 +163,23 @@
 			"file": "py2gcode/main.py",
 			"settings":
 			{
-				"buffer_size": 788,
+				"buffer_size": 1227,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py2gcode/utils.py",
+			"settings":
+			{
+				"buffer_size": 900,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py2gcode/viewer.py",
+			"settings":
+			{
+				"buffer_size": 5866,
 				"line_ending": "Windows"
 			}
 		},
@@ -180,14 +196,6 @@
 			"settings":
 			{
 				"buffer_size": 1321,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "py2gcode/utils.py",
-			"settings":
-			{
-				"buffer_size": 135,
 				"line_ending": "Windows"
 			}
 		}
@@ -248,6 +256,8 @@
 	},
 	"file_history":
 	[
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/utils.py",
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/example.py",
 		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2LinuxCNC/tests.py",
 		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2LinuxCNC/py2gcode/codes.py",
 		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2LinuxCNC/py2gcode/py2gcode.py",
@@ -302,6 +312,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"elem_rb",
+			"50",
+			"print",
 			"py2gcode",
 			"programm",
 			"points",
@@ -335,19 +348,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "example.py",
+					"file": "reshetka.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 389,
+						"buffer_size": 1223,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								342,
-								342
+								1034,
+								1035
 							]
 						],
 						"settings":
@@ -355,59 +368,59 @@
 							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 450.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "py2gcode/viewer.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5440,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2283,
-								2283
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1083.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
 					"file": "py2gcode/main.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 788,
+						"buffer_size": 1227,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								108,
-								108
+								623,
+								623
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Python/Python.tmLanguage",
 							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 405.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "py2gcode/utils.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 900,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								844,
+								844
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -417,6 +430,33 @@
 				},
 				{
 					"buffer": 3,
+					"file": "py2gcode/viewer.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5866,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1308,
+								1308
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 648.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
 					"file": "py2gcode/py2gcode.py",
 					"semi_transient": false,
 					"settings":
@@ -444,7 +484,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "py2gcode/cnc.py",
 					"semi_transient": false,
 					"settings":
@@ -464,33 +504,6 @@
 						{
 							"syntax": "Packages/Python/Python.tmLanguage",
 							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 225.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "py2gcode/utils.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 135,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								72,
-								72
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -534,7 +547,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 249.0
+		"height": 325.0
 	},
 	"output.unsaved_changes":
 	{

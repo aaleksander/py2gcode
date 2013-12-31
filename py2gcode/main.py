@@ -23,16 +23,42 @@ def programm(function):
 	function()
 	return __cnc__.as_is()
 
+def com2text(g):
+	'конвертирует запись в текстовый вид'
+	res = g[0]
+	pars = g[1]
+	if( pars['X'] != None ):
+		res += (" X%s" % pars['X'])
+
+	if( pars['Y'] != None ):
+		res += (" Y%s" % pars['Y'])
+
+	if( pars['Z'] != None ):
+		res += (" Z%s" % pars['Z'])
+
+	return res
+
 def export(function, filename):
 	'Экспортирует результат выполнения функции в файл'
 	function()
-	print __cnc__.as_is()
+	myfile = open(filename,'w')
+	for l in __cnc__.as_is():
+		#print l
+		myfile.write(com2text(l) + "\n")
+	myfile.close()
+	#print __cnc__.as_is()
 
 
 def preview(function):
 	'выводит на экран траекторию работы программы'
 	v = Viewer(function)
 	v.show()
+
+
+def path(com, str):
+	'''путь на микроязыке'''
+	pass
+
 
 #всякие команды
 def G0(X = None, Y = None, Z = None): 

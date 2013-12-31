@@ -3,6 +3,7 @@
 #подключаем библиотеку
 from py2gcode import *
 
+
 def drill(x, y):
 	G0(X=x, Y=y, Z=-1)
 	for z in xrange(0, 10):
@@ -28,8 +29,9 @@ def f():
 	G0(X=10, Y=10, Z=-5)
 	for x in xrange(10, 100, 10):
 		G0(X=x, Y=10, Z=-5)
-		cut(x, 10, x, 50, 0, 10, 1)
+		cut(x, 20, x, 50, 0, 10, 1)
 		G0(Z = -5)
+
 	drill(10, 10)
 	drill(90, 10)
 	drill(90, 60)
