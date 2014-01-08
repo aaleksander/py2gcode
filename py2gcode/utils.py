@@ -9,6 +9,7 @@ def rect(x, y, w, h, z):
 	x, y - координата
 	w, h - ширина и длина
 	'''
+	G0(x, y)
 	G1(Z = z)
 	G1(X = x + w)
 	G1(Y = y + h)
@@ -21,11 +22,29 @@ def circle(x, y, z, r):
 	x, y - координаты центра
 	'''
 	a = 0
-	G0(Y = y + r)
+	G0(X = r*sin(a) + x, Y = r*cos(a) + y)
 	G1(Z=z)
 	while a <= 6.3:
 		G1(X = r*sin(a) + x, Y = r*cos(a) + y)
 		a+=0.1
+
+def oval(x, y, z, rx, ry, aStart=0, aStop=6.3):
+	'''
+	почти тоже самое, что и круг, только с двумя разными радиусами
+	x, y - координаты центра
+	'''
+	a = aStart
+	G0(X = rx*cos(a) + x, Y = ry*sin(a) + y)
+	G1(Z=z)
+	if aStart<aStop:
+		while a <= aStop:
+			G1(X = rx*cos(a) + x, Y = ry*sin(a) + y)
+			a+=0.1
+	else:
+		while a >= aStop:
+			G1(X = rx*cos(a) + x, Y = ry*sin(a) + y)
+			a-=0.1
+	
 
 #написАл заранее
 def cutLine(x1, y1, x2, y2, z1, z2, step):

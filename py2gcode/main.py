@@ -38,15 +38,16 @@ def com2text(g):
 
 	return res
 
-def export(function, filename):
+def export(function):
 	'Экспортирует результат выполнения функции в файл'
 	function()
-	myfile = open(filename,'w')
+	#myfile = open(filename,'w')
 	for l in __cnc__.as_is():
-		#print l
-		myfile.write(com2text(l) + "\n")
-	myfile.close()
+		print com2text(l)
+		#myfile.write(com2text(l) + "\n")
+	#myfile.close()
 	#print __cnc__.as_is()
+	print "m2"
 
 
 def preview(function):

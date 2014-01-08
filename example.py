@@ -21,20 +21,29 @@ def cut(x1, y1, x2, y2, z1, z2, step):
 
 #вырежем решетку
 def f():
-	G0(X=0, Y=0, Z=-20)
-	for z in xrange(0, 10, 3):
-		rect(0, 0, 100, 60, z)
+	G0(X=0, Y=0, Z=0)
 
-	G0(Z = -20)
-	G0(X=10, Y=10, Z=-5)
-	for x in xrange(10, 100, 10):
-		G0(X=x, Y=10, Z=-5)
-		cut(x, 20, x, 50, 0, 10, 1)
-		G0(Z = -5)
+	dep = -4
 
-	drill(10, 10)
-	drill(90, 10)
-	drill(90, 60)
-	drill(10, 60)
+	while dep > -9:
+		G1(Z= dep)
 
-preview(f)
+		for x in xrange(3, 45, 6):
+			G1(Y=75)
+			G1(X=x)
+			G1(Y=0)
+			G1(X=x + 3)		
+		G1(Y=75)
+		G1(X=0)
+		G0(Z=0)
+		G0(X=42, Y=0)
+		G1(Z=dep)
+		G1(X=0)
+		dep -= 1
+	G0(0, 0, 0)
+
+print("g21 g64 g90")
+print("F200")
+export(f)
+
+print "M2"
