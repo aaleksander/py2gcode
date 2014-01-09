@@ -6,8 +6,7 @@ from py2gcode import *
 
 sz = 5
 def f():
-	G0(Z=sz)
-	G0(X=0, Y=0)
+	G0(X=0, Y=0, Z=0)
 
 	z = -7.5 #начальная глубина
 
@@ -57,4 +56,5 @@ def f():
 
 print("g21 g64 g90")
 print("F400")
-export(f)
+#export(f)
+preview(f)

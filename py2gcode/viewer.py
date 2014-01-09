@@ -95,7 +95,6 @@ class Viewer:
 		#добавляем в сцену кубик
 		s = 90
 
-
 		#получаем список команд
 		comm = main.programm(function)
 		#print comm
@@ -146,7 +145,7 @@ class Viewer:
 
 	def add_point(self, x, y, z, t):
 		'добавление точки'		
-		self.points.append(Point(x, y, z, t))
+		self.points.append(Point(x, y, -z, t))
 
 	def down1(self, event):
 		'вдавили левую кнопку'
@@ -179,7 +178,6 @@ class Viewer:
 		self.draw()
 		self.last_x = event.x
 		self.last_y = event.y
-
 
 	def scroll(self, event):
 		'скроллируем сцену'
@@ -214,6 +212,7 @@ class Viewer:
 			zz.append(i.Z)
 		minx = min(xx)
 		maxx = max(xx)
+		
 		self.shift_x = (maxx + minx)/2 - minx
 
 		miny = min(yy)
@@ -241,13 +240,13 @@ class Viewer:
 			p.append(tmp.Y)
 		#рисуем оставшиеся линии
 		self.c.create_line(p, tags="theline", fill=curr_type)
-		print self._zoom	
+		#print self._zoom	
 
 	def to_2D(self, p):
 		x = p.X - self.shift_x # + self.scroll_x
 		y = p.Y - self.shift_y# + self.scroll_y
 		z = (p.Z - self.shift_z)/(self._zoom/10.)
-
+		
 		t = Point(x, y, p.Z, p.Type)
 
 		a_x = self.rot_x/100.
@@ -266,12 +265,8 @@ class Viewer:
 		sy += self.scroll_y
 		return Point(sx, sy, 0, p.Type)
 
-
-
-
 def go_home():
 	G0(X=0, Y=0, Z=0)
-
 
 def f():
 	go_home()

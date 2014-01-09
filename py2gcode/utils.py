@@ -3,19 +3,23 @@
 #Всякие вспомогательные функции
 from main import *
 
+safeZ = 5
+
+def rect_pref(x, y):
+	G0(Z=safeZ)
+	G0(x, y)
+
 def rect(x, y, w, h, z):
 	'''
 	обводит прямогольник на глубине z
 	x, y - координата
 	w, h - ширина и длина
 	'''
-	G0(x, y)
 	G1(Z = z)
 	G1(X = x + w)
 	G1(Y = y + h)
 	G1(X = x)
 	G1(Y = y)
-
 
 def circle(x, y, z, r):
 	'''
@@ -57,15 +61,24 @@ def cutLine(x1, y1, x2, y2, z1, z2, step):
 		G1(x1, y1)
 
 
-def immersion(z1, z2, step, f):
+def immersion(z1, z2, step, pref, f):
 	'''f - это подпрограмма *горизонтальной* обработки
-	программа выполняет это подпрограмму, погружаясь с глубины z1 до z2 с шагом	
+	программа выполняет эту подпрограмму, погружаясь с глубины z1 до z2 с шагом	
 	ПОДПРОГРАММА ДОЛЖНА БЫТЬ ЦИКЛИЧНА
+	z1 должен быть больше z2 (z1 - верх, z2 - низ)
 	'''
-	z = z1
-	while z<z2:
+	G0(Z=safeZ)
+	z = z1	
+	while z>z2:
+		pref()
+		G1(Z = z)
 		f()
-		z += step
-		G1(Z = z)		
+		z -= step
+		G0(Z=safeZ)
+	if z != z2:
+		pref()
+		G1(Z=z2)
+		f()
+	G0(Z=safeZ)
 
 
