@@ -155,12 +155,28 @@
 			"file": "py2gcode/meta.py",
 			"settings":
 			{
-				"buffer_size": 477,
+				"buffer_size": 2715,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py2gcode/geometry.py",
+			"settings":
+			{
+				"buffer_size": 2619,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py2gcode/viewer.py",
+			"settings":
+			{
+				"buffer_size": 5867,
 				"line_ending": "Windows"
 			}
 		}
 	],
-	"build_system": "Packages/D/D.sublime-build",
+	"build_system": "Packages/Python/Python.sublime-build",
 	"command_palette":
 	{
 		"height": 380.0,
@@ -278,6 +294,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"color",
 			"elem_rb",
 			"50",
 			"print",
@@ -318,15 +335,42 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 477,
+						"buffer_size": 2715,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2209,
+								2209
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 900.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "py2gcode/geometry.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2619,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								119,
+								119
 							]
 						],
 						"settings":
@@ -335,6 +379,34 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "py2gcode/viewer.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5867,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4183,
+								4093
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3828.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -375,7 +447,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 325.0
+		"height": 220.0
 	},
 	"output.unsaved_changes":
 	{
