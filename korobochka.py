@@ -148,7 +148,7 @@ def f():
 
 print("g21 g64 g90")
 print("F1200")
-#preview(f)
-export(f)
+preview(f)
+#export(f)
 
 
