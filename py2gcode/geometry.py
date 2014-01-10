@@ -16,6 +16,18 @@ class Point:
 	def __init__(self, x, y):
 		self.x = x;
 		self.y = y
+		self.tag = None
+
+	def __eq__(self, other):
+		if isinstance(other, Point) == False:
+			return False
+		return other.x == self.x and other.y == self.y
+
+	def copy(self):
+		return Point(self.x, self.y)
+
+	def __str__(self):
+		return "Point(%(x)s, %(y)s)" % {'x': self.x, 'y': self.y}
 
 class Circle:
 	def __init__(self, x, y, r):
