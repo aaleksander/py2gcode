@@ -29,16 +29,43 @@ class Point:
 	def __str__(self):
 		return "Point(%(x)s, %(y)s)" % {'x': self.x, 'y': self.y}
 
+	def __sub__(self, b):
+		return Point(self.x - b.x, self.y - b.y)
+
 class Circle:
 	def __init__(self, x, y, r):
 		self.c = Point(x, y)
 		self.r = r
 
+	def __str__(self):
+		return "Circle(%(x)s, %(y)s, %(r)s)" % {'x': self.c.x, 'y': self.c.y, 'r': self.r}
+
+
 class Line:
-	def __init__(self, a, b, c):
-		self.a = a
-		self.b = b
-		self.c = c
+	def __init__(self, a=None, b=None, c=None, p1=None, p2=None):
+		if p1 == None:
+			self.a = a
+			self.b = b
+			self.c = c
+		if p2 != None and p1 != None:
+			self.p1 = p1
+			self.p2 = p2
+			self.a = p2.y - p1.y
+			self.b = p1.x - p2.x
+			self.c = -self.a*p1.x - self.b*p1.y
+
+	def __str__(self):
+		return "Line(%(a)s, %(b)s, %(c)s)" % {'a': self.a, 'b': self.b, 'c': self.c}
+
+
+	def init_p1(self, x):
+		'вычисляем одну точку по какой-нибудь координате'
+		self.p1 = Point(x, (-self.a*x - self.c)/self.b)
+
+	def init_p2(self, x):
+		'вычисляем одну точку по какой-нибудь координате'
+		self.p2 = Point(x, (-self.a*x - self.c)/self.b)
+
 
 def contact_points (p, c):
 	'''точки касания касательной с окружностью
@@ -57,6 +84,40 @@ def contact_points (p, c):
 	d = dist (p, c.c)
 	k = sqrt (d * d - c.r * c.r)
 	return cross_circle(p.x, p.y, k, c.c.x, c.c.y, c.r)
+
+def contact_lines(c1, c2):
+	'''Возвращает массив всех общих касательных двух окружностей'''
+	def tangents (c, r1, r2):
+		'вовзращает одну линию r1, r2 - радиусы, с - какая-то точка'
+		r = r2 - r1;
+		z = c.x*c.x + c.y*c.y;
+		d = z - r*r;
+		if (d < -eps):
+			return None
+		d = sqrt (abs (d));
+		
+		a = (c.x * r + c.y * d) / z;
+		b = (c.y * r - c.x * d) / z;
+		c = r1;
+		return Line(a, b, c)
+
+	res = []
+	for i in xrange(-1, 2, 2):
+		for j in xrange(-1, 2, 2):
+			l = tangents (c2.c - c1.c, c1.r*i, c2.r*j)
+			if l != None:
+				res.append(l)
+	for l in res:
+		l.c -= (l.a * c1.c.x + l.b * c1.c.y);
+
+	#теперь найдем точки пересечения этих касательных с окружностями
+	for l in res:
+		pp = cross_line_circle(l, c1)
+		l.p1 = pp[0]
+		pp = cross_line_circle(l, c2)
+		l.p2 = pp[0]
+	return res
+
 
 def dist(a, b):
 	'расстояние между двумя точками'
@@ -105,23 +166,25 @@ def cross_line_circle (l, c):
 		if c.r > d: 
 			flag = 2
 		else:
+			print "облом"
 			return ()
 
     #находим расстояние от проекции до точек пересечения
-	k = sqrt (c.r * c.r - d * d)
+	if flag == 1:
+		k = 0
+	else:
+		k = sqrt (c.r * c.r - d * d)
+
 	t = dist (Point(0, 0), Point (l.b, - l.a))
-	#добавляем к проекции векторы направленные к точкам пеерсечения
+	#добавляем к проекции векторы направленные к точкам пересечения
 	p1 = add_vector (p, Point (0, 0), Point (- l.b, l.a), k / t);
 	p2 = add_vector (p, Point (0, 0), Point (l.b, - l.a), k / t);
 	return (p1, p2)
-
 
 def closest_point (l, p):
 	'''проекция точки на прямую'''
 	k = (l.a * p.x + l.b * p.y + l.c) / (l.a * l.a + l.b * l.b)
 	return Point (p.x - l.a * k, p.y - l.b * k)
-
-
 
 def add_vector (p, p1, p2, k):
 	'''добавление заданной части вектора к точке'''

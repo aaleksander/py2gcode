@@ -72,8 +72,8 @@ class MetaViewer:
 				r = p['radius']				
   				self.canvas.create_oval(x - r, y - r, x + r, y + r, outline='yellow')
 
-  		for s in self.__path:
-  			print s
+  		#for s in self.__path:
+  		#	print s
 
   		for s in self.__path:
   			if s.type == SEG_LINE:
@@ -85,6 +85,18 @@ class MetaViewer:
   				#self.canvas.create_arc(s.p1.x, s.p1.y, s.p2.x, s.p2.y, outline='blue')
 
 		#self.canvas.create_line(self.__path, fill='red', arrow = LAST, arrowshape = (15, 20, 5))
+		'''
+		c1 = Circle(350, 200, 10.0)
+		self.canvas.create_oval(c1.c.x - c1.r, c1.c.y - c1.r, c1.c.x + c1.r, c1.c.y + c1.r, outline='yellow')
+
+		c2 = Circle(550, 201, 10.0)
+		self.canvas.create_oval(c2.c.x - c2.r, c2.c.y - c2.r, c2.c.x + c2.r, c2.c.y + c2.r, outline='yellow')
+		
+		ll = contact_lines(c1, c2)
+
+		for l in ll:
+			self.canvas.create_line(l.p1.x, l.p1.y, l.p2.x, l.p2.y, fill='blue')'''
+
 
 	def __drawPoint(self, x, y):
 		size = 5
@@ -145,8 +157,10 @@ class MetaViewer:
 			else:
 				return (pp[0], o2)
 
-		if isinstance(o1, Circle) and isinstance(o2, Circle):
-			raise Exception("Пока что две окружности подряд не поддерживаются")
+		if isinstance(o1, Circle) and isinstance(o2, Circle):	
+			ll = contact_lines(o1, o2)
+			return (ll[0].p1, ll[0].p2)
+			#raise Exception("Пока что две окружности подряд не поддерживаются")
 
 		return (Point(p1['x'], p1['y']), Point(p2['x'], p2['y']))
 
@@ -171,10 +185,11 @@ def point(x, y, radius = None):
 
 if __name__ == '__main__':
 	pp = []
-	pp.append( point(100, 100, 20) )
-	pp.append( point(200, 100) )
-	pp.append( point(200, 300, 20) )
-	pp.append( point(100, 300) )
+	pp.append( point(100, 100, 20.0) )
+	pp.append( point(200, 100, 50.0) )
+	pp.append( point(200, 300, 10) )
+	pp.append( point(100, 300, 30) )
+
 	#pp.append( point(200, 300) )
 	#pp.append( point(100, 300, 10) )
 	#pp.append( point(120, 200) )
