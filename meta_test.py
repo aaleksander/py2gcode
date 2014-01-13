@@ -7,10 +7,10 @@ pp = []
 pp.append( point(10, 10, 3) )
 pp.append( point(40, 10, 3) )
 pp.append( point(40, 30, 3) )
-#pp.append( point(30, 20, -3) )
+pp.append( point(30, 20, -3) )
 pp.append( point(10, 30, 3) )
 
-v = MetaViewer(pp)
+v = Meta(pp)
 #v.show()
 
 def f():	

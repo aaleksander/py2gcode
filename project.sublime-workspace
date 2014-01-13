@@ -167,7 +167,7 @@
 			"file": "py2gcode/meta.py",
 			"settings":
 			{
-				"buffer_size": 6206,
+				"buffer_size": 6185,
 				"line_ending": "Windows"
 			}
 		},
@@ -175,7 +175,7 @@
 			"file": "meta_test.py",
 			"settings":
 			{
-				"buffer_size": 336,
+				"buffer_size": 335,
 				"line_ending": "Windows"
 			}
 		},
@@ -314,6 +314,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"print",
 			"Point",
 			"cross_line_circle",
 			"канве",
@@ -349,7 +350,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -358,15 +359,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6206,
+						"buffer_size": 6185,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3385,
-								3385
+								3782,
+								3782
 							]
 						],
 						"settings":
@@ -385,15 +386,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 336,
+						"buffer_size": 335,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								84,
-								84
+								0,
+								0
 							]
 						],
 						"settings":

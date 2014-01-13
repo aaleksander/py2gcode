@@ -80,7 +80,7 @@ class Segment:
 			G1(l[0], l[1])
 
 
-class MetaViewer:
+class Meta:
 	'Просмотрщик метатраектории'
 	def __init__(self, points):
 		#точки должны быть в том порядке, в каком будет обход
@@ -149,8 +149,6 @@ class MetaViewer:
 	def __create_path(self):
 		'создает траекторию по self.points'
 		self.__path = []
-
-		print self.points
 
 		prev = self.points[0]
 		prevO = Point(None, None)
@@ -230,7 +228,7 @@ if __name__ == '__main__':
 	pp.append( point(100, 100, 30.0) )
 	pp.append( point(400, 100, 50.0) )
 	pp.append( point(400, 300, 30) )
-	pp.append( point(300, 200, -30) )
+	pp.append( point(300, 200, -50) )
 	pp.append( point(100, 300, 30) )
 
 #	pp.append( point(100, 100, 30) )
@@ -238,6 +236,6 @@ if __name__ == '__main__':
 #	pp.append( point(130, 130, -10) )
 #	pp.append( point(80, 300, 20) )
 
-	v = MetaViewer(pp)
+	v = Meta(pp)
 	v.show()
 
