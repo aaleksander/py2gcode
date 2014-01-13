@@ -164,26 +164,18 @@
 	"buffers":
 	[
 		{
-			"file": "py2gcode/meta.py",
-			"settings":
-			{
-				"buffer_size": 6185,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "meta_test.py",
 			"settings":
 			{
-				"buffer_size": 335,
+				"buffer_size": 414,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "py2gcode/geometry.py",
+			"file": "py2gcode/meta.py",
 			"settings":
 			{
-				"buffer_size": 4977,
+				"buffer_size": 6308,
 				"line_ending": "Windows"
 			}
 		},
@@ -252,6 +244,7 @@
 	},
 	"file_history":
 	[
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/geometry.py",
 		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/main.py",
 		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/utils.py",
 		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/cnc.py",
@@ -355,46 +348,19 @@
 			[
 				{
 					"buffer": 0,
-					"file": "py2gcode/meta.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6185,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3782,
-								3782
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1485.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "meta_test.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 335,
+						"buffer_size": 414,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								98,
+								98
 							]
 						],
 						"settings":
@@ -408,20 +374,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "py2gcode/geometry.py",
+					"buffer": 1,
+					"file": "py2gcode/meta.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4977,
+						"buffer_size": 6308,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3069,
-								3069
+								6020,
+								6020
 							]
 						],
 						"settings":
@@ -429,13 +395,13 @@
 							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 42.0,
+						"translation.y": 2336.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 2,
 					"file": "py2gcode/viewer.py",
 					"semi_transient": false,
 					"settings":

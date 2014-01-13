@@ -1,24 +1,28 @@
 # -*- coding: utf-8 -*-
-
-
 from py2gcode import *
 
-pp = []
-pp.append( point(10, 10, 3) )
-pp.append( point(40, 10, 3) )
-pp.append( point(40, 30, 3) )
-pp.append( point(30, 20, -3) )
-pp.append( point(10, 30, 3) )
+v = Meta()
+#v.point(10, 10, 5)
+#v.point(40, 10, 5)
+#v.point(40, 30, 5)
+#v.point(30, 20, -5)
+#v.point(20, 20, -5)
+#v.point(10, 30, 5)
+v.point(50, 10, 10)
+v.point(70, 80, -10)
+v.point(100, 100, 10)
+v.point(70, 120, -10)
+v.point(50, 190, 10)
+v.point(30, 100, 30)
 
-v = Meta(pp)
-#v.show()
+#v.show(5)
 
-def f():	
+def f():
 	G0(0, 0, 5)
 	G0(Z = 5)
 	z = -3
 	while z > -10:
 		v.to_gcode(z)
 		z -= 1
-	
+
 preview(f)

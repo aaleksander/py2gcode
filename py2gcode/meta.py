@@ -79,51 +79,54 @@ class Segment:
 		for l in ll:
 			G1(l[0], l[1])
 
-
 class Meta:
-	'Просмотрщик метатраектории'
-	def __init__(self, points):
+	'Метатраектория'
+	def __init__(self):
 		#точки должны быть в том порядке, в каком будет обход
-		self.points = points
+		self.points = []
+		#self.__create_path()
 
 
-		self.__create_path()
+	def point(self, x, y, radius=None):
+		self.points.append( point(x, y, radius))
+		if len(self.points) > 1:
+			self.__create_path()
 
-	def show(self):
-		self.draw()
+
+	def show(self, scale = 1):
+		self.draw(scale)
 		self.root.mainloop()
 
-	def draw(self):
+	def draw(self, scale):
 		'рисуем сцену с учетом всех вращений, преобразований и сдвигов'
 		self.root = Tk()
 
 		self.root.title("MetaViewer")
 		self.canvas = Canvas(self.root, bg="white", width=640, height=480)
-		self.canvas.configure(background='black')
+		self.canvas.configure(background='black', width=800, height=600)
 		#self.c.configure(cursor="crosshair")
 		self.canvas.pack()
-
-		#посчитаем масштаб, чтобы растянуть/уместить все на экран
 
 		#рисуем
 		self.canvas.delete('all')
 
 		#рисуем все точки в виде желтых окружностей с перекрестием
+		
 		for p in self.points:
-			x = p['x']
-			y = p['y']
+			x = p['x']*scale
+			y = p['y']*scale
 			self.__drawPoint(x, y)
 			if 'radius' in p.keys():
 				r = p['radius']				
-  				self.canvas.create_oval(x - r, y - r, x + r, y + r, outline='yellow')
-
+  				self.canvas.create_oval(x - r*scale, y - r*scale, x + r*scale, y + r*scale, outline='yellow')
+  		
   		#рисуем путь
   		for s in self.__path:
   			if s.type == SEG_LINE:
-  				self.canvas.create_line(s.p1.x, s.p1.y, s.p2.x, s.p2.y, fill='red')
+  				self.canvas.create_line(s.p1.x*scale, s.p1.y*scale, s.p2.x*scale, s.p2.y*scale, fill='red')
   			if s.type == SEG_ARC:
-  				self.canvas.create_line(s.get_lines(), fill='red')#, arrow = LAST, arrowshape = (15, 20, 5))
-
+  				self.canvas.create_line(map(lambda x: x*scale, s.get_lines()), fill='red')#, arrow = LAST, arrowshape = (15, 20, 5))
+		
 
 	def to_gcode(self, z):
 		'отправляем все в Г-код на определенную глубина'
@@ -224,18 +227,19 @@ def point(x, y, radius = None):
 
 
 if __name__ == '__main__':
-	pp = []
-	pp.append( point(100, 100, 30.0) )
-	pp.append( point(400, 100, 50.0) )
-	pp.append( point(400, 300, 30) )
-	pp.append( point(300, 200, -50) )
-	pp.append( point(100, 300, 30) )
+	v = Meta()
+	v.point(50, 10, 10)
+	v.point(70, 80, -10)
+	v.point(100, 100, 10)
+	v.point(70, 120, -10)
+	v.point(50, 190, 10)
+	v.point(30, 100, 30)
 
 #	pp.append( point(100, 100, 30) )
 #	pp.append( point(300, 80, 20) )
 #	pp.append( point(130, 130, -10) )
 #	pp.append( point(80, 300, 20) )
 
-	v = Meta(pp)
-	v.show()
+
+	v.show(2)
 
