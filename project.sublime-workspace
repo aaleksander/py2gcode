@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"ra",
+				"radius"
+			],
+			[
+				"get",
+				"get_lines"
+			],
+			[
+				"appen",
+				"append_arc"
+			],
+			[
 				"shift_",
 				"shift_y"
 			],
@@ -155,7 +167,15 @@
 			"file": "py2gcode/meta.py",
 			"settings":
 			{
-				"buffer_size": 2715,
+				"buffer_size": 6206,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "meta_test.py",
+			"settings":
+			{
+				"buffer_size": 336,
 				"line_ending": "Windows"
 			}
 		},
@@ -163,7 +183,7 @@
 			"file": "py2gcode/geometry.py",
 			"settings":
 			{
-				"buffer_size": 2619,
+				"buffer_size": 4977,
 				"line_ending": "Windows"
 			}
 		},
@@ -171,7 +191,7 @@
 			"file": "py2gcode/viewer.py",
 			"settings":
 			{
-				"buffer_size": 5867,
+				"buffer_size": 5889,
 				"line_ending": "Windows"
 			}
 		}
@@ -232,11 +252,11 @@
 	},
 	"file_history":
 	[
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/main.py",
+		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/utils.py",
 		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/cnc.py",
 		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/py2gcode.py",
 		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/viewer.py",
-		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/utils.py",
-		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/py2gcode/main.py",
 		"/D/Aleksander/Разное/Станок ЧПУ/Разработки/py2gcode/reshetka.py",
 		"/C/Program Files (x86)/Inkscape/share/extensions/gcodetools.py",
 		"/D/Aleksander/dev/D/winapi/main.d",
@@ -294,6 +314,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Point",
+			"cross_line_circle",
+			"канве",
 			"color",
 			"elem_rb",
 			"50",
@@ -326,7 +349,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -335,15 +358,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2715,
+						"buffer_size": 6206,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2209,
-								2209
+								3385,
+								3385
 							]
 						],
 						"settings":
@@ -351,26 +374,26 @@
 							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 900.0,
+						"translation.y": 1485.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "py2gcode/geometry.py",
+					"file": "meta_test.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2619,
+						"buffer_size": 336,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								119,
-								119
+								84,
+								84
 							]
 						],
 						"settings":
@@ -385,19 +408,46 @@
 				},
 				{
 					"buffer": 2,
-					"file": "py2gcode/viewer.py",
+					"file": "py2gcode/geometry.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5867,
+						"buffer_size": 4977,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4183,
-								4093
+								3069,
+								3069
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 42.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "py2gcode/viewer.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5889,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								244,
+								249
 							]
 						],
 						"settings":
@@ -406,7 +456,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 3828.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

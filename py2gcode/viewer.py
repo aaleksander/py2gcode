@@ -15,7 +15,7 @@ from cnc import *
 средняя - вращать
 '''
 
-class Point:
+class Point_v:
 	'точка'
 	def __init__(self, x, y, z, t):
 		self.x = x
@@ -44,17 +44,17 @@ class Point:
 		'вращаем точку вокруг х на градус а. Возвращает новую точку'
 		y = self.Y*cos(a) - self.Z*sin(a)
 		z = self.Y*sin(a) + self.Z*cos(a)
-		return Point(self.X, y, z, self.Type)
+		return Point_v(self.X, y, z, self.Type)
 
 	def rot_y(self, a):
 		x = self.X*cos(a) + self.Z*sin(a)
 		z = -self.X*sin(a) + self.Z*cos(a)
-		return Point(x, self.Y, z, self.Type)
+		return Point_v(x, self.Y, z, self.Type)
 
 	def rot_z(self, a):
 		x = self.X*cos(a) - self.Y*sin(a)
 		y = self.X*sin(a) + self.Y*cos(a)
-		return Point(x, y, self.X, self.Type)
+		return Point_v(x, y, self.X, self.Type)
 
 class Viewer:
 	'Просмотрщик'
@@ -145,7 +145,7 @@ class Viewer:
 
 	def add_point(self, x, y, z, t):
 		'добавление точки'		
-		self.points.append(Point(x, y, -z, t))
+		self.points.append(Point_v(x, y, -z, t))
 
 	def down1(self, event):
 		'вдавили левую кнопку'
@@ -196,10 +196,10 @@ class Viewer:
 
 		#TODO: рисуем стол
 		table = [
-			Point(0, 0, 0, 'yellow'),
-			Point(0, 0, 100, 'yellow'),
-			Point(0, 0, 0, 'yellow'),
-			Point(0, 0, 0, 'yellow'),
+			Point_v(0, 0, 0, 'yellow'),
+			Point_v(0, 0, 100, 'yellow'),
+			Point_v(0, 0, 0, 'yellow'),
+			Point_v(0, 0, 0, 'yellow'),
 		]
 
 		#проходим по всем точкам без учета цвета и вычисляем смещение для центрирование на сцене
@@ -247,7 +247,7 @@ class Viewer:
 		y = p.Y - self.shift_y# + self.scroll_y
 		z = (p.Z - self.shift_z)/(self._zoom/10.)
 		
-		t = Point(x, y, p.Z, p.Type)
+		t = Point_v(x, y, p.Z, p.Type)
 
 		a_x = self.rot_x/100.
 		a_y = self.rot_y/100.
@@ -263,7 +263,7 @@ class Viewer:
 
 		sx += self.scroll_x
 		sy += self.scroll_y
-		return Point(sx, sy, 0, p.Type)
+		return Point_v(sx, sy, 0, p.Type)
 
 def go_home():
 	G0(X=0, Y=0, Z=0)

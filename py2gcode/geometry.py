@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from math import sqrt
+from math import *
 
 #всякие геометрические штуки
 #взято отсюда: http://hardfire.ru/all_geom
@@ -160,7 +160,7 @@ def cross_line_circle (l, c):
     #сколько всего решений?
 	flag = 0
 	d = dist (c.c, p)
-	if abs (d - c.r) <= eps: 
+	if abs (d - abs(c.r)) <= eps: 
 		flag = 1
 	else:
 		if c.r > d: 
@@ -189,3 +189,25 @@ def closest_point (l, p):
 def add_vector (p, p1, p2, k):
 	'''добавление заданной части вектора к точке'''
 	return Point (p.x + (p2.x - p1.x) * k, p.y + (p2.y - p1.y) * k);
+
+def get_angle(p11, p12, p21, p22):
+	'возвращает угол между двумя отрезками'
+	l1 = sqrt((p11.x - p12.x)*(p11.x - p12.x) + (p11.y - p12.y)*(p11.y - p12.y))
+	l2 = sqrt((p21.x - p22.x)*(p21.x - p22.x) + (p21.y - p22.y)*(p21.y - p22.y))
+
+	v1 = Point(0, 0)
+	v2 = Point(0, 0)
+	v1.x = (p12.x/l1 - p11.x/l1);
+	v1.y = (p12.y/l1 - p11.y/l1);
+	v2.x = (p22.x/l2 - p21.x/l2);
+	v2.y = (p22.y/l2 - p21.y/l2);
+
+
+  	res = atan2(v1.x*v2.y - v2.x*v1.y, v1.x*v2.x + v1.y*v2.y)
+
+	if res < 0:
+		res = pi + (pi - abs(res))
+
+	return res
+
+

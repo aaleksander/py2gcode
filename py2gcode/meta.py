@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from Tkinter import *
 from geometry import *
+from math import cos, sin
+from main import *
 
 
 #построение мета-траекторий, т.е. замкнутых траекторий на основе каких-то опорных точек и с помощью "эластичной ленты" вокруг всех точек
@@ -37,19 +39,53 @@ class Segment:
 	def __str__(self):
 		return "%(t)s, %(p1)s, %(p2)s" % {'t': self.type, 'p1': self.p1, 'p2': self.p2}
 
+
+	def get_lines(self):
+		'''возвращает список координта, готовый для рисования на канве
+		т.е. просто список: x, y, x, y, x, y, x, y, x, y ...		'''
+		
+		#считаем начальный угол
+		zero = Point(self.center.x + 100, self.center.y)
+		a1 = get_angle(self.center, self.p1, self.center, zero)
+		a2 = get_angle(self.center, self.p2, self.center, zero)
+
+		if self.radius < 0:
+			a1, a2 = a2, a1
+
+		if a1 < a2:
+			a1 += 2*pi
+
+		r = dist(self.center, self.p1)
+		res = []
+		while a1 > a2:
+			res.append(self.center.x + r*cos(a1))
+			res.append(self.center.y - r*sin(a1))
+			a1 = a1 - 0.1
+
+		if a1 < a2:
+			res.append(self.center.x + r*cos(a2))
+			res.append(self.center.y - r*sin(a2))
+
+		return res
+
+	def to_gcode(self):
+		ll = self.get_lines()
+		pair = lambda arr: [arr[i:i + 2] for i in range(0, len(arr), 2)]	 #разбивает на пары
+
+		ll = pair(ll)
+		if self.radius < 0:
+			ll.reverse()
+
+		for l in ll:
+			G1(l[0], l[1])
+
+
 class MetaViewer:
 	'Просмотрщик метатраектории'
 	def __init__(self, points):
 		#точки должны быть в том порядке, в каком будет обход
 		self.points = points
-		self.root = Tk()
 
-		self.root.title("MetaViewer")
-
-		self.canvas = Canvas(self.root, bg="white", width=640, height=480)
-		self.canvas.configure(background='black')
-		#self.c.configure(cursor="crosshair")
-		self.canvas.pack()
 
 		self.__create_path()
 
@@ -59,11 +95,20 @@ class MetaViewer:
 
 	def draw(self):
 		'рисуем сцену с учетом всех вращений, преобразований и сдвигов'
+		self.root = Tk()
+
+		self.root.title("MetaViewer")
+		self.canvas = Canvas(self.root, bg="white", width=640, height=480)
+		self.canvas.configure(background='black')
+		#self.c.configure(cursor="crosshair")
+		self.canvas.pack()
+
 		#посчитаем масштаб, чтобы растянуть/уместить все на экран
 
 		#рисуем
 		self.canvas.delete('all')
 
+		#рисуем все точки в виде желтых окружностей с перекрестием
 		for p in self.points:
 			x = p['x']
 			y = p['y']
@@ -72,30 +117,27 @@ class MetaViewer:
 				r = p['radius']				
   				self.canvas.create_oval(x - r, y - r, x + r, y + r, outline='yellow')
 
-  		#for s in self.__path:
-  		#	print s
-
+  		#рисуем путь
   		for s in self.__path:
   			if s.type == SEG_LINE:
   				self.canvas.create_line(s.p1.x, s.p1.y, s.p2.x, s.p2.y, fill='red')
   			if s.type == SEG_ARC:
-  				#вычислить углы и проинтерполировать
-  				#print s
-  				self.canvas.create_line(s.p1.x, s.p1.y, s.p2.x, s.p2.y, fill='blue', arrow = LAST, arrowshape = (15, 20, 5))
-  				#self.canvas.create_arc(s.p1.x, s.p1.y, s.p2.x, s.p2.y, outline='blue')
+  				self.canvas.create_line(s.get_lines(), fill='red')#, arrow = LAST, arrowshape = (15, 20, 5))
 
-		#self.canvas.create_line(self.__path, fill='red', arrow = LAST, arrowshape = (15, 20, 5))
-		'''
-		c1 = Circle(350, 200, 10.0)
-		self.canvas.create_oval(c1.c.x - c1.r, c1.c.y - c1.r, c1.c.x + c1.r, c1.c.y + c1.r, outline='yellow')
 
-		c2 = Circle(550, 201, 10.0)
-		self.canvas.create_oval(c2.c.x - c2.r, c2.c.y - c2.r, c2.c.x + c2.r, c2.c.y + c2.r, outline='yellow')
-		
-		ll = contact_lines(c1, c2)
-
-		for l in ll:
-			self.canvas.create_line(l.p1.x, l.p1.y, l.p2.x, l.p2.y, fill='blue')'''
+	def to_gcode(self, z):
+		'отправляем все в Г-код на определенную глубина'
+		first = False
+  		for s in self.__path:
+  			if s.type == SEG_LINE:
+  				if first == False:
+  					G0(s.p1.x, s.p1.y)
+  					G1(Z = z)
+  					first = True
+  				G1(s.p2.x, s.p2.y)
+  			if s.type == SEG_ARC:
+  				s.to_gcode()
+  				G1(s.p2.x, s.p2.y)
 
 
 	def __drawPoint(self, x, y):
@@ -104,10 +146,11 @@ class MetaViewer:
 		self.canvas.create_line(x - size, y, x + size, y, fill='yellow')
 
 
-	#TODO: сделать, чтобы можно было сделать две окружности подряд
 	def __create_path(self):
 		'создает траекторию по self.points'
 		self.__path = []
+
+		print self.points
 
 		prev = self.points[0]
 		prevO = Point(None, None)
@@ -116,9 +159,8 @@ class MetaViewer:
 			pp = self.__get_segment(prev, p)
 
 			if len(pp) == 2:			
-				if isCircle(prev) and first == False:#если предыдущая точка была окружность, то вставляем дугу					
+				if isCircle(prev) and first == False:#если предыдущая точка была окружность, то вставляем дугу				
 					self.__path.append(Segment(SEG_ARC, prevO, pp[0], Point(prev['x'], prev['y']), prev['radius']))
-
 				self.__path.append(Segment(SEG_LINE, pp[0], pp[1]))
 				prevO = pp[1].copy()
 
@@ -185,14 +227,16 @@ def point(x, y, radius = None):
 
 if __name__ == '__main__':
 	pp = []
-	pp.append( point(100, 100, 20.0) )
-	pp.append( point(200, 100, 50.0) )
-	pp.append( point(200, 300, 10) )
+	pp.append( point(100, 100, 30.0) )
+	pp.append( point(400, 100, 50.0) )
+	pp.append( point(400, 300, 30) )
+	pp.append( point(300, 200, -30) )
 	pp.append( point(100, 300, 30) )
 
-	#pp.append( point(200, 300) )
-	#pp.append( point(100, 300, 10) )
-	#pp.append( point(120, 200) )
+#	pp.append( point(100, 100, 30) )
+#	pp.append( point(300, 80, 20) )
+#	pp.append( point(130, 130, -10) )
+#	pp.append( point(80, 300, 20) )
 
 	v = MetaViewer(pp)
 	v.show()
