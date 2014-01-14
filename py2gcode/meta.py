@@ -87,8 +87,8 @@ class Meta:
 		#self.__create_path()
 
 
-	def point(self, x, y, radius=None):
-		self.points.append( point(x, y, radius))
+	def point(self, x, y, radius=None, rounding=None):
+		self.points.append( point(x, y, radius, rounding))
 		if len(self.points) > 1:
 			self.__create_path()
 
@@ -152,31 +152,50 @@ class Meta:
 	def __create_path(self):
 		'создает траекторию по self.points'
 		self.__path = []
+		stack = [] #тут будем запоминать предыдущие значения
 
 		prev = self.points[0]
-		prevO = Point(None, None)
+		prevO = None#Point(None, None)
 		first = True
 		for p in self.points[1:]:
 			pp = self.__get_segment(prev, p)
 
+			if prevO != None: #сохраняем в стэке предыдущее значение
+				stack.insert(0, prevO)
 			if len(pp) == 2:			
 				if isCircle(prev) and first == False:#если предыдущая точка была окружность, то вставляем дугу				
 					self.__path.append(Segment(SEG_ARC, prevO, pp[0], Point(prev['x'], prev['y']), prev['radius']))
+
+				#if isRound(prev) and first == False:
+				#	self.__path.append(Segment(SEG_LINE, Point(pp[0].x + 10, pp[0].y + 10), pp[1]))
+
 				self.__path.append(Segment(SEG_LINE, pp[0], pp[1]))
 				prevO = pp[1].copy()
+
 
 			prev = p.copy()
 			first = False
 
+		#завершаем контур
 		pp = self.__get_segment(prev, self.points[0])
 
 		if isCircle(prev):#если предыдущая точка была окружность, то вставляем дугу
 			self.__path.append(Segment(SEG_ARC, prevO, pp[0], Point(prev['x'], prev['y']), prev['radius']))
+		
+		if isRound(prev):#предыдущую точку надо скруглить
+			print pp[0]
+			self.__path.append(Segment(SEG_LINE, Point(prevO.x - 10, prevO.y - 10), 
+				Point(pp[0].x + 10, pp[0].y + 10) ))
+			self.__path.append(Segment(SEG_LINE, Point(pp[0].x + 10, pp[0].y + 10), 
+				Point(pp[0].x + 10, pp[0].y + 10) ))
+
 		self.__path.append(Segment(SEG_LINE, pp[0], pp[1]))
 
 		if isCircle(self.points[0]):			
 			self.__path.append(Segment(SEG_ARC, pp[1], self.__path[0].p1, Point(self.points[0]['x'], self.points[0]['y']), self.points[0]['radius']))
 
+		#if isRound(self.points[0]):
+		#	self.__path.append(Segment(SEG_LINE, pp[1], self.__path[0].p1))
 
 	def __get_segment(self, p1, p2):
 		'''return кортеж Point'''
@@ -207,39 +226,40 @@ class Meta:
 
 		return (Point(p1['x'], p1['y']), Point(p2['x'], p2['y']))
 
-
 def dict2object(o):
 	'преобразует словарик в точку или окружность'
 	if isCircle(o):
 		return Circle(o['x'], o['y'], o['radius'])
 	return Point(o['x'], o['y'])
 
-
 def isCircle(p):
 	return 'radius' in p.keys()
 
-def point(x, y, radius = None):
+def isRound(p):
+	return 'round' in p.keys()
+
+def point(x, y, radius = None, rounding=None):
 	'создает словарик для точки'
 	res = {'x': x, 'y': y}
 	if radius != None:
 		res['radius'] = radius
-	return res
+	if rounding != None:
+		res['round'] = rounding
 
+	return res
 
 if __name__ == '__main__':
 	v = Meta()
-	v.point(50, 10, 10)
-	v.point(70, 80, -10)
-	v.point(100, 100, 10)
-	v.point(70, 120, -10)
-	v.point(50, 190, 10)
-	v.point(30, 100, 30)
+#	v.point(50, 10, 10)
+#	v.point(70, 80, -10)
+#	v.point(100, 100, 10)
+#	v.point(70, 120, -10)
+#	v.point(50, 190, 10)
+#	v.point(30, 100, 30)
 
-#	pp.append( point(100, 100, 30) )
-#	pp.append( point(300, 80, 20) )
-#	pp.append( point(130, 130, -10) )
-#	pp.append( point(80, 300, 20) )
-
+	v.point(100, 100)
+	v.point(300, 100, 10) 
+	v.point(300, 200) 
+	v.point(100, 200) 
 
 	v.show(2)
-
