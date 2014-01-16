@@ -211,3 +211,23 @@ def get_angle(p11, p12, p21, p22):
 	return res
 
 
+def get_cross_point(p11, p12, p21, p22):
+	'возвращает точку пересечения двух отрезков'
+	Z  = (p12.y-p11.y)*(p21.x-p22.x)-(p21.y-p22.y)*(p12.x-p11.x)
+	Ca = (p12.y-p11.y)*(p21.x-p11.x)-(p21.y-p11.y)*(p12.x-p11.x)
+	Cb = (p21.y-p11.y)*(p21.x-p22.x)-(p21.y-p22.y)*(p21.x-p11.x)
+
+	#прямые совпадают
+	if Z == 0 and Ca == 0 and Cb == 0:
+		return None
+
+	#прямые параллельны
+	if Z == 0:
+		return None
+
+	Ua = Ca/Z
+	Ub = Cb/Z
+
+	res = Point(p11.x + (p12.x - p11.x) * Ub, p11.y + (p12.y - p11.y) * Ub)
+	return res
+

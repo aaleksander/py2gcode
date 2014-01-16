@@ -4,7 +4,6 @@ from geometry import *
 from math import cos, sin
 from main import *
 
-
 #построение мета-траекторий, т.е. замкнутых траекторий на основе каких-то опорных точек и с помощью "эластичной ленты" вокруг всех точек
 '''
 опорная точка - это словарь со следующими полями
@@ -12,7 +11,6 @@ x, y - координата
 radius - радиус точки, по умолчанию - ноль
 	- если радиус отрицательный, то траектория его "обойдет" с другой стороны
 '''
-#TODO: добавить матричные операции (повернуть на угол, отразить, растянуть)
 
 
 def get_from_ring(l, i, off):
@@ -63,8 +61,8 @@ class Segment:
 			'считает линии для дуги от точки до точки и с центром'
 			#считаем начальный угол
 			zero = Point(center.x + 100, center.y)
-			a1 = get_angle(center, self.p1, center, zero)
-			a2 = get_angle(center, self.p2, center, zero)
+			a1 = get_angle(center, p1, center, zero)
+			a2 = get_angle(center, p2, center, zero)
 
 			if self.radius < 0:
 				a1, a2 = a2, a1
@@ -72,7 +70,7 @@ class Segment:
 			if a1 < a2:
 				a1 += 2*pi
 
-			r = dist(center, self.p1)
+			r = dist(center, p1)
 			res = []
 			while a1 > a2:
 				res.append(center.x + r*cos(a1))
@@ -85,55 +83,74 @@ class Segment:
 				res.append(center.y - r*sin(a2))
 			return res
 
-
 		if self.type == SEG_ARC: #скругляем дугу относительно центра
 			res = get_line_for_arc(self.p1, self.center, self.p2)
 		else:
 			#расчитываем, откуда будет начинаться дуга
+			#res = [self.p1.x, self.p1.y, self.p2.x, self.p2.y]
 
-			zero = Point(self.center.x + 1000, self.center.y)
-			
-			a1 = get_angle(self.center, self.p1, self.center, zero)
-			a2 = get_angle(self.center, self.p2, self.center, zero)		
-			if a2 < a1:
-				a2 += pi*2	
-			#a1 = get_angle(self.p1, self.center, self.center, zero)
-			#a2 = get_angle(self.p1, self.center, self.center, self.p2) + a1
-			middle = (a1 + a2)/2.0			
-  			
-			rr = self.radius/sin(middle)#acos(middle - a1)*self.radius
+			a1 = get_angle(self.p1, self.center, self.p1, Point(self.p1.x + 100, self.p1.y))
+			a2 = get_angle(self.p1, self.center, self.center, self.p2)
 
-			if middle <= pi:
-				center = [self.center.x + rr*cos(middle), self.center.y - rr*sin(middle)]
-			else:
-				center = [self.center.x - rr*cos(middle), self.center.y + rr*sin(middle)]
-			print self.center, a1*180.0/pi, a2*180.0/pi, middle*180.0/pi, center
-			print
+			rr1 = self.__get_border(self.p1, self.center, self.radius)
+			rr2 = self.__get_border(self.center, self.p2, self.radius)
 
-			#находим начальную и конучную точки дуги
+			if a2 > pi:
+				cr = get_cross_point(rr1[2], rr1[3], rr2[2], rr2[3])
+  			else:
+  				cr = get_cross_point(rr1[0], rr1[1], rr2[0], rr2[1])
 
-  			if( canvas != None ):
-  				canvas.create_oval(
-  					center[0] - self.radius, center[1] - self.radius,
-  					center[0] + self.radius, center[1] + self.radius, outline='blue')
+			pp = contact_points(self.center, Circle(cr.x, cr.y, self.radius))
+			'''
+			if canvas != None:
+				canvas.create_oval(
+					cr.x - self.radius, cr.y - self.radius,
+					cr.x + self.radius, cr.y + self.radius, outline='blue')
+				canvas.create_line(pp[1].x, pp[1].y, pp[0].x, pp[0].y, fill='green')'''
 
-#			p1 = contact_points(self.center, Circle(center[0], center[1], self.radius))[0]
-#			p2 = contact_points(self.center, Circle(center[0], center[1], self.radius))[1]
-
- # 			res = [p1.x, p1.y, p2.x, p2.y]
-
-			#res = get_line_for_arc(self.p1, 
-			#	Point(self.center.x + rr*cos(middle), self.center.y - rr*sin(middle)), 
-			#	self.p2)
-
-			#res += center
-
-			#res = get_line_for_arc(self.p1, self.center, self.p2)
-			res = [	self.center.x, self.center.y, 
-					self.center.x + self.radius*cos(middle),
-					self.center.y - self.radius*sin(middle)]
-
+			res = get_line_for_arc(pp[0], cr, pp[1])
+			#res += [pp[1].x, pp[1].y, cr.x, cr.y, pp[0].x, pp[0].y]
 		return res
+
+	def round(self, p1, c, p2, r):
+		'''
+		Скругляет угол с заданым радиусом
+		Получает на вход p1, center, p2, radius
+		возвращает [p1, center, p2], готовое для скармливания get_line_for_arc
+		'''
+		#расчитываем, откуда будет начинаться дуга
+		#self.p1 = Point(
+		#	(self.center.x + p1.x)/2,
+		#	(self.center.y + p1.y)/2)
+		#self.p2 = Point(
+		#	(self.center.x + p2.x)/2,
+		#	(self.center.y + p2.y)/2)
+		
+		print p1, c, p2, r
+		a1 = get_angle(p1, c, p1, Point(p1.x + 100, p1.y))
+		a2 = get_angle(p1, c, c, p2)
+		print a1, a2
+		rr1 = self.__get_border(p1, c, r)
+		rr2 = self.__get_border(c, p2, r)
+
+		if a2 > pi:
+			cr = get_cross_point(rr1[2], rr1[3], rr2[2], rr2[3])
+		else:
+			cr = get_cross_point(rr1[0], rr1[1], rr2[0], rr2[1])
+
+		pp = contact_points(c, Circle(cr.x, cr.y, r))
+
+		self.p1 = pp[0]
+		self.p1 = pp[1]		
+
+	def __get_border(self, p1, p2, w):
+		'возвращает координаты прямоугольника, описанного вокруг отрезка'
+		angle = get_angle(p1, Point(p1.x + 10, p1.y), p1, p2)
+		r1 = Point(p1.x - w*sin(angle), p1.y + w*cos(angle))
+		r2 = Point(p2.x - w*sin(angle), p2.y + w*cos(angle))
+		r3 = Point(p2.x + w*sin(angle), p2.y - w*cos(angle))
+		r4 = Point(p1.x + w*sin(angle), p1.y - w*cos(angle))
+		return (r1, r2, r3, r4)
 
 	def to_gcode(self):
 		ll = self.get_lines()
@@ -146,18 +163,6 @@ class Segment:
 		for l in ll:
 			G1(l[0], l[1])
 
-	def round(self, p1, p2):
-		'скругляем сегмент'
-#		self.center = Point(self.center.x - 5, self.center.y - 5)
-		self.p1 = Point(
-			(self.center.x + p1.x)/2,
-			(self.center.y + p1.y)/2)
-		self.p2 = Point(
-			(self.center.x + p2.x)/2,
-			(self.center.y + p2.y)/2)
-
-		#print self.p1
-		#print self.p2
 
 
 class Meta:
@@ -206,8 +211,7 @@ class Meta:
   				self.canvas.create_line(s.p1.x*scale, s.p1.y*scale, s.p2.x*scale, s.p2.y*scale, fill='red')
   			if s.type == SEG_ARC:
   				self.canvas.create_line(map(lambda x: x*scale, s.get_lines()), fill='red')#, arrow = LAST, arrowshape = (15, 20, 5))
-  			if s.type == SEG_ROUND: 				
-
+  			if s.type == SEG_ROUND:
   				self.canvas.create_line(map(lambda x: x*scale, s.get_lines(self.canvas)), fill='red')#, arrow = LAST, arrowshape = (15, 20, 5))
 
 	def to_gcode(self, z):
@@ -233,19 +237,16 @@ class Meta:
 
 	def __create_path(self):
 		'создает траекторию по self.points'
+		print "__create_path"
 		self.__path = []
-		stack = [] #тут будем запоминать предыдущие значения
 
 		prev = self.points[0]
 		prevO = None#Point(None, None)
 		first = True
 		for p in self.points[1:]:
 			pp = self.__get_segment(prev, p) #расчитываем сегмент
-			if prevO != None: #сохраняем в стэке предыдущее значение
-				stack.insert(0, prevO)
 			if len(pp) == 2:
 				if isRound(prev) and first == True: #первая точка - скругление
-					#pp = Point(p.x, p.y)					
 					self.__path.append(Segment(SEG_ROUND, prev, prev, Point(prev['x'], prev['y']), prev['round']))
 
 				if isCircle(prev) and first == False:#если предыдущая точка была окружность, то вставляем дугу
@@ -269,7 +270,6 @@ class Meta:
 		if isRound(prev):#скругляем угол
 			self.__path.append(Segment(SEG_ROUND, p, p, prevO, prev['round']))
 
-
 		self.__path.append(Segment(SEG_LINE, pp[0], pp[1]))
 
 		if isCircle(self.points[0]):			
@@ -277,15 +277,26 @@ class Meta:
 
 		#проходим по траектории и скругляем углы (round)
 
+		print "path:"
+		for s in self.__path:
+			print s
+		print ":path end", len(self.__path)
 		new_path = []
 		for i in xrange(0, len(self.__path)):
 			s = self.__path[i]
 			if s.type == SEG_ROUND:
 				s_prev = get_from_ring(self.__path, i, -1)
+				print "prev", s_prev
+				print "curr", s
 				s_past = get_from_ring(self.__path, i, 1)
-				s.round(s_prev.p1, s_past.p2) #скругляем
+				print "past", s_past	
+				print 			
+				p1, c, p2 = s.round(s_prev.p1, s.center, s_past.p2, s.radius) #скругляем
+				s.p1 = p1
+				s.p2 = p2
+				#заменяем нашу вершину на дугу (всталяем в середину пути)
 
-				#заменяем нашу вершину на дуугу (всталяем в середину пути)
+				#у предыдущего и последующего сегментов изменились конечная и начальные точки соответственно
 
 
 		#if isRound(self.points[0]):
@@ -316,7 +327,6 @@ class Meta:
 		if isinstance(o1, Circle) and isinstance(o2, Circle):	
 			ll = contact_lines(o1, o2)
 			return (ll[0].p1, ll[0].p2)
-			#raise Exception("Пока что две окружности подряд не поддерживаются")
 
 		return (Point(p1['x'], p1['y']), Point(p2['x'], p2['y']))
 
@@ -346,26 +356,17 @@ if __name__ == '__main__':
 
 
 	v = Meta()
-#	v.point(50, 10, 10)
-#	v.point(70, 80, -10)
-#	v.point(100, 100, 10)
-#	v.point(70, 120, -10)
-#	v.point(50, 190, 10)
-#	v.point(30, 100, 30)
-
-	v.point(200, 200, rounding=30)
-	v.point(300, 200, rounding=-30)
-	
-	v.point(350, 100, rounding=10) #^
-
-	v.point(450, 200, rounding=-30)
-	v.point(700, 200, rounding=30) 
-	v.point(600, 400, rounding=30) 
-
-	v.point(450, 400, rounding=-20)
-	v.point(350, 500, rounding=20)
-	v.point(300, 400, rounding=-20)
-
-	v.point(200, 400, rounding=30) 
+	'''
+	v.point(200, 200)
+	v.point(300, 200)
+	v.point(300, 100)
+	v.point(450, 200)
+	v.point(600, 100) 
+	v.point(600, 400) 
+	v.point(200, 400)
+	'''
+	v.point(200, 400)
+	v.point(300, 100, rounding=20)
+	v.point(400, 400)
 
 	v.show()

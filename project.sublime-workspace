@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"round",
+				"rounding"
+			],
+			[
+				"conta",
+				"contact_lines"
+			],
+			[
+				"create",
+				"create_oval"
+			],
+			[
+				"get_lin",
+				"get_line_for_arc"
+			],
+			[
+				"SEG",
+				"SEG_ROUND"
+			],
+			[
 				"ra",
 				"radius"
 			],
@@ -163,6 +183,30 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "py2gcode/meta.py",
+			"settings":
+			{
+				"buffer_size": 10556,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/Y/GraphEditor/EditPath.pas",
+			"settings":
+			{
+				"buffer_size": 40651,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "py2gcode/geometry.py",
+			"settings":
+			{
+				"buffer_size": 4999,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "Packages/Python/Python.sublime-build",
 	"command_palette":
@@ -271,7 +315,7 @@
 	],
 	"find":
 	{
-		"height": 46.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -285,6 +329,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"print",
 			"]):\n",
 			"__create",
 			"print",
@@ -323,8 +368,91 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "py2gcode/meta.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10556,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2943,
+								2943
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1140.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/Y/GraphEditor/EditPath.pas",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 40651,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Pascal/Pascal.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 315.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "py2gcode/geometry.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4999,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4999,
+								4999
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2774.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
