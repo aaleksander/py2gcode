@@ -226,6 +226,7 @@ class Viewer:
 		p = [] #тут будут наши спроецированные точки
 		#преобразуем наши точки в 2D
 		curr_type = None
+
 		for i in self.points:
 			tmp = self.to_2D(i)
 			if( curr_type == None ):
@@ -238,6 +239,7 @@ class Viewer:
 			#добавляем во временный массив
 			p.append(tmp.X)
 			p.append(tmp.Y)
+
 		#рисуем оставшиеся линии
 		self.c.create_line(p, tags="theline", fill=curr_type)
 		#print self._zoom	
