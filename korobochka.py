@@ -18,22 +18,21 @@ wall = 10.0
 #диаметр инструмента
 diam = 3.0
 
-safeZ=2
+safeZ=5
 
 def UP():
 	#поднимает фрезу на безопасное расстояние
-	G0(Z = sz)
+	G0(Z = safeZ)
 
 def fill_rect_pref(x, y):
 	G0(Z = safeZ)
 	G0(x + diam/2, y + diam/2)
-	
+
 def fill_rect(x, y, length, width, w=None):
 	#w - толщина границы, None - если надо вырезать всю площадь, либо - конкретную ширину пропила
 	step = diam*0.7
-	#G0(Z = sz)
 	G0(x + diam/2, y + diam/2)
-	
+
 	#G1(Z = z)
 	xl = x + diam/2
 	xr = x + length - diam/2
@@ -78,9 +77,9 @@ def fill_rect(x, y, length, width, w=None):
 		G1(Y = yt)
 		G1(X = xr)
 		G1(Y=yb)
-		G1(X = xl)		
+		G1(X = xl)
 	G0(Z = safeZ)
-	
+
 def cut_rect(x, y, length, width, depth):
 	#вырезаем прямоугольник определенного размера на определенную глубину
 	#с перемычками
@@ -115,9 +114,7 @@ def cut_rect(x, y, length, width, depth):
 	G1(Y = y - diam/2 )
 	G1(x - diam/2)
 
-	
 def f():
-#	G0(Z=sz)
 	G0(0, 0, 0)
 
 #вырезаем низ
@@ -126,24 +123,23 @@ def f():
 		lambda: fill_rect_pref(0, 0), 
 		lambda: fill_rect(0, 0, in_length, in_width))
 
-		
 	immersion(0, -thickness/2, diam,
 		lambda: fill_rect_pref(-wall, -wall), 
 		lambda: fill_rect(-wall, -wall, in_length + 2*wall, in_width + 2*wall, wall/2))
 
 	cut_rect(-wall, -wall, in_length + 2*wall, in_width + 2*wall, -thickness)
-	
+
 #пошла вторая часть
 	off_x = in_length + wall*2 + diam
 
 	immersion(0, -thickness/2, diam, 
 		lambda: fill_rect_pref(0 + off_x - wall/2, -wall/2), 
 		lambda: fill_rect(-wall/2 + off_x, -wall/2, in_length + wall, in_width + wall))
-		
+
 	immersion(-thickness/2, -dep_2, diam, 
 		lambda: fill_rect_pref(0 + off_x, 0), 
 		lambda: fill_rect(0 + off_x, 0, in_length, in_width))
-		
+
 	cut_rect(-wall + off_x, -wall, in_length + 2*wall, in_width + 2*wall, -thickness)
 
 print("g21 g64 g90")

@@ -24,23 +24,23 @@ def programm(function):
 	return __cnc__.as_is()
 
 def com2text(g):
-	'конвертирует запись в текстовый вид'
-	print g
-	res = g[0]
-	pars = g[1]
-	if 'X' in pars and pars['X'] != None:
-		res += (" X%s" % pars['X'])
+    'конвертирует запись в текстовый вид'
+    def format(pp,  par):
+        if par in pp and pp[par] != None:
+            return (" %(n)s%(v)s" % {'n': par, 'v': pp[par]})
+        else:
+            return ""
 
-	if 'Y' in pars and pars['Y'] != None:
-		res += (" Y%s" % pars['Y'])
+    res = g[0]
+    pars = g[1]
+    res += format(pars,  'X')
+    res += format(pars,  'Y')
+    res += format(pars,  'Z')
 
-	if 'Y' in pars and pars['Z'] != None:
-		res += (" Z%s" % pars['Z'])
+    if 'value' in pars and pars['value'] != None:
+        res += ("%s" % pars['value'])
 
-	if 'value' in pars and pars['value'] != None:
-		res += ("%s" % pars['value'])
-
-	return res
+    return res
 
 def export(function):
 	'Экспортирует результат выполнения функции в файл'
@@ -52,7 +52,6 @@ def export(function):
 	#myfile.close()
 	#print __cnc__.as_is()
 	print "m2"
-
 
 def preview(function):
 	'выводит на экран траекторию работы программы'
@@ -73,7 +72,6 @@ def G0(X = None, Y = None, Z = None):
 def G1(X = None, Y = None, Z = None): 
 	'рабочее перемещение'
 	__cnc__.G1(X, Y, Z)
-
 
 def F(value):
 	__cnc__.F(value)
