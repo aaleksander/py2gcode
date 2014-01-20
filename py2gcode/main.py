@@ -25,16 +25,20 @@ def programm(function):
 
 def com2text(g):
 	'конвертирует запись в текстовый вид'
+	print g
 	res = g[0]
 	pars = g[1]
-	if( pars['X'] != None ):
+	if 'X' in pars and pars['X'] != None:
 		res += (" X%s" % pars['X'])
 
-	if( pars['Y'] != None ):
+	if 'Y' in pars and pars['Y'] != None:
 		res += (" Y%s" % pars['Y'])
 
-	if( pars['Z'] != None ):
+	if 'Y' in pars and pars['Z'] != None:
 		res += (" Z%s" % pars['Z'])
+
+	if 'value' in pars and pars['value'] != None:
+		res += ("%s" % pars['value'])
 
 	return res
 
@@ -71,5 +75,6 @@ def G1(X = None, Y = None, Z = None):
 	__cnc__.G1(X, Y, Z)
 
 
-
+def F(value):
+	__cnc__.F(value)
 

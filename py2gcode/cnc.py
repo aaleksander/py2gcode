@@ -32,6 +32,9 @@ class CNC:
 	def G1(self, X=None, Y=None, Z=None):
 		self.__append("G1", {'X': X, 'Y': Y, 'Z': Z})
 
+	def F(self, value):
+		self.__append("F", {'value': value})
+		
 	def as_is(self):
 		return self.__code
 	

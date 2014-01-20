@@ -328,7 +328,7 @@ def point(x, y, radius = None, rounding=None):
 
 if __name__ == '__main__':
     v = Meta()
-    
+
     v.point(20, 20,  rounding=3)
     v.point(30, 20,  rounding=3) 
     v.point(30, 10,  rounding=3)
@@ -336,13 +336,15 @@ if __name__ == '__main__':
     v.point(60, 10,  radius=5) 
     v.point(65, 40,  rounding=3) 
     v.point(20, 40,  rounding=3) 
-    
-    v.show(8)    
+
+    #v.show(8)
     def f():
+        F(300)
         G0(0, 0, 5)
+        F(1000)
         z = -3
         v.to_gcode(z)
         G0(Z=5)
 
-    preview(f)
+#    preview(f)
     export(f)
