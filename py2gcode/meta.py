@@ -157,7 +157,6 @@ class Meta:
     def point(self, x, y, radius=None, rounding=None):
         self.points.append( point(x, y, radius, rounding))
 
-
     def show(self, scale = 1):
         self.__create_path()
         self.draw(scale)
@@ -169,7 +168,7 @@ class Meta:
 
         self.root.title("MetaViewer")
         self.canvas = Canvas(self.root, bg="white", width=640, height=480)
-        self.canvas.configure(background='black', width=800, height=600)        
+        self.canvas.configure(background='black', width=1000, height=600)        
         self.canvas.pack()
 
         #рисуем
@@ -192,6 +191,8 @@ class Meta:
                 self.canvas.create_line(map(lambda x: x*scale, s.get_lines()), fill='red',  width=2)#, arrow = LAST, arrowshape = (15, 20, 5))
             if s.type == SEG_ROUND:
                 self.canvas.create_line(map(lambda x: x*scale, s.get_lines(self.canvas)), fill='red',  width=2)#, arrow = LAST, arrowshape = (15, 20, 5))
+        
+        return self.canvas #на тот случай, если кто-то еще захочет порисовать
 
     def to_gcode(self, z):
         'отправляем все в Г-код на определенную глубину'
@@ -346,5 +347,5 @@ if __name__ == '__main__':
         v.to_gcode(z)
         G0(Z=5)
 
-#    preview(f)
-    export(f)
+    preview(f)
+#    export(f)
