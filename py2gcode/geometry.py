@@ -11,7 +11,6 @@ IN_CIRCLE 	= 0
 ON_CIRCLE 	= 1
 OUT_CIRCLE 	= 2
 
-
 class Point:
 	def __init__(self, x, y):
 		self.x = x;
