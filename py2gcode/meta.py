@@ -3,6 +3,7 @@ from Tkinter import *
 from geometry import *
 from math import cos, sin
 from main import *
+from trajectory import *
 
 #построение мета-траекторий, т.е. замкнутых траекторий на основе каких-то опорных точек и с помощью "эластичной ленты" вокруг всех точек
 '''
@@ -53,7 +54,7 @@ class Segment:
         return "%(t)s, %(p1)s, %(p2)s, %(c)s, %(r)s" % {'t': self.type, 'p1': self.p1, 'p2': self.p2, 'c': self.center, 'r': self.radius}
 
     def get_lines(self, canvas=None):
-        '''возвращает список координт, готовый для рисования на канве
+        '''возвращает список координат, готовый для рисования на канве
         т.е. просто список: x, y, x, y, x, y, x, y, x, y ...		'''
 
         def get_line_for_arc(p1, center, p2,  dir = False):
@@ -138,144 +139,134 @@ class Segment:
         return (r1, r2, r3, r4)
 
     def to_gcode(self):
+        ll = self.to_points()
+        for l in ll:
+            G1(l['x'],  l['y'])
+            
+    def to_points(self):
+        'разбить на отдельные точки для траектории'
         ll = self.get_lines()
         pair = lambda arr: [arr[i:i + 2] for i in range(0, len(arr), 2)]	#разбивает на пары
 
         ll = pair(ll)
+        res = []
+        for l in ll:        
+            res.append({'x': l[0],  'y':l[1]})
+            
+        return res
 
-        for l in ll:
-            G1(l[0], l[1])
 
-class Meta:
+class Meta(Trajectory):
     'Метатраектория'
     def __init__(self):
-        #точки должны быть в том порядке, в каком будет обход
-        self.points = []
-        #self.__create_path()
-
+        super(Meta,  self).__init__()
+        
+        self.refPoints = [] #опорные точки
 
     def point(self, x, y, radius=None, rounding=None):
-        self.points.append( point(x, y, radius, rounding))
+        self.refPoints.append( point(x, y, radius, rounding))
 
-    def show(self, scale = 1):
-        self.__create_path()
-        self.draw(scale)
-        self.root.mainloop()
-
-    def draw(self, scale):
+    def draw_points(self, canvas,  scale):
         'рисуем сцену с учетом всех вращений, преобразований и сдвигов'
-        self.root = Tk()
-
-        self.root.title("MetaViewer")
-        self.canvas = Canvas(self.root, bg="white", width=640, height=480)
-        self.canvas.configure(background='black', width=1000, height=600)        
-        self.canvas.pack()
-
-        #рисуем
-        self.canvas.delete('all')
-
         #рисуем все точки в виде желтых окружностей с перекрестием
-        for p in self.points:
+        for p in self.refPoints:
             x = p['x']*scale
             y = p['y']*scale
             self.__drawPoint(x, y)
             if 'radius' in p.keys():
                 r = p['radius']				
-                self.canvas.create_oval(x - r*scale, y - r*scale, x + r*scale, y + r*scale, outline='yellow')
+                canvas.create_oval(x - r*scale, y - r*scale, x + r*scale, y + r*scale, outline='yellow')
 
         #рисуем путь
-        for s in self.__path:
+        '''
+        for s in self.path:
             if s.type == SEG_LINE:
                 self.canvas.create_line(s.p1.x*scale, s.p1.y*scale, s.p2.x*scale, s.p2.y*scale, fill='red',  width=2)
             if s.type == SEG_ARC:
                 self.canvas.create_line(map(lambda x: x*scale, s.get_lines()), fill='red',  width=2)#, arrow = LAST, arrowshape = (15, 20, 5))
             if s.type == SEG_ROUND:
                 self.canvas.create_line(map(lambda x: x*scale, s.get_lines(self.canvas)), fill='red',  width=2)#, arrow = LAST, arrowshape = (15, 20, 5))
-        
+
         return self.canvas #на тот случай, если кто-то еще захочет порисовать
-
-    def to_gcode(self, z):
-        'отправляем все в Г-код на определенную глубину'
-        self.__create_path()
-        first = True
-        for s in self.__path:
-            if first:
-                if s.type == SEG_ROUND:
-                    G0(s.p2.x, s.p2.y)
-                    G1(Z = z)
-                else:
-                    G0(s.p1.x, s.p1.y)
-                    G1(Z = z)
-
-            if s.type == SEG_LINE:
-                first = True
-                G1(s.p2.x, s.p2.y)
-            if s.type == SEG_ARC:
-                s.to_gcode()
-                G1(s.p2.x, s.p2.y)
-
-            if s.type == SEG_ROUND:
-                s.to_gcode()
-               
-            first = False
+        '''
 
     def __drawPoint(self, x, y):
         size = 5
         self.canvas.create_line(x, y - size, x, y + size, fill='yellow')
         self.canvas.create_line(x - size, y, x + size, y, fill='yellow')
 
+    def create_trajectory(self):
+        self.points = []
+        self.create_path()
+        first = True
+        for s in self.path:
+            #if first:
+            #    self.points.append(point(s.p1.x,  s.p1.y))
+            if s.type == SEG_LINE:
+                if first:
+                    self.points.append( point(s.p1.x,  s.p1.y))  #{'x': s.p2.x,  'y':s.p2.y})
+                self.points.append( point(s.p2.x,  s.p2.y))  #{'x': s.p2.x,  'y':s.p2.y})
+            if s.type == SEG_ARC:
+                self.points += s.to_points()
+                self.points.append(point (s.p2.x,  s.p2.y))# {'x': s.p2.x,  'y':s.p2.y})
+            if s.type == SEG_ROUND:
+                self.points += s.to_points()
+                
+            first = False
+            
+    def create_path(self):
+        'создает траекторию по self.refPoints'
+        self.path = []
 
-    def __create_path(self):
-        'создает траекторию по self.points'
-        self.__path = []
-
-        prev = self.points[0]
+        prev = self.refPoints[0]
         prevO = None#Point(None, None)
         first = True
-        for p in self.points[1:]:
+        for p in self.refPoints[1:]:
             pp = self.__get_segment(prev, p) #расчитываем сегмент
+            
             if len(pp) == 2:
                 if isRound(prev) and first == True: #первая точка - скругление
-                    self.__path.append(Segment(SEG_ROUND, prev, prev, Point(prev['x'], prev['y']), prev['round']))
-                
+                    self.path.append(Segment(SEG_ROUND, prev, prev, Point(prev['x'], prev['y']), prev['round']))
+
                 if isCircle(prev) and first == False:#если предыдущая точка была окружность, то вставляем дугу
-                    self.__path.append(Segment(SEG_ARC, prevO, pp[0], Point(prev['x'], prev['y']), prev['radius']))
+                    self.path.append(Segment(SEG_ARC, prevO, pp[0], Point(prev['x'], prev['y']), prev['radius']))
 
                 if isRound(prev) and first == False:#скругляем угол
-                    self.__path.append(Segment(SEG_ROUND, p, p, prevO, prev['round']))
+                    self.path.append(Segment(SEG_ROUND, p, p, prevO, prev['round']))
 
-                self.__path.append(Segment(SEG_LINE, pp[0], pp[1]))
+                self.path.append(Segment(SEG_LINE, pp[0], pp[1]))
                 prevO = pp[1].copy()
 
             prev = p.copy() #запоминаем предыдущую точку
             first = False
 
         #завершаем контур
-        pp = self.__get_segment(prev, self.points[0])
+        pp = self.__get_segment(prev, self.refPoints[0])
 
         if isCircle(prev):#если предыдущая точка была окружность, то вставляем дугу
-            self.__path.append(Segment(SEG_ARC, prevO, pp[0], Point(prev['x'], prev['y']), prev['radius']))
+            self.path.append(Segment(SEG_ARC, prevO, pp[0], Point(prev['x'], prev['y']), prev['radius']))
 
         if isRound(prev):#скругляем угол
-            self.__path.append(Segment(SEG_ROUND, p, p, prevO, prev['round']))
+            self.path.append(Segment(SEG_ROUND, p, p, prevO, prev['round']))
 
-        self.__path.append(Segment(SEG_LINE, pp[0], pp[1]))
+        self.path.append(Segment(SEG_LINE, pp[0], pp[1]))
 
-        if isCircle(self.points[0]):			
-            self.__path.append(Segment(SEG_ARC, pp[1], self.__path[0].p1, Point(self.points[0]['x'], self.points[0]['y']), self.points[0]['radius']))
+        if isCircle(self.refPoints[0]):			
+            self.path.append(Segment(SEG_ARC, pp[1], self.path[0].p1, Point(self.refPoints[0]['x'], self.refPoints[0]['y']), self.refPoints[0]['radius']))
 
         #проходим по траектории и скругляем углы (round)
         new_path = []
-        for i in xrange(0, len(self.__path)):
-            s = self.__path[i]
+        for i in xrange(0, len(self.path)):
+            s = self.path[i]
             if s.type == SEG_ROUND:
-                s_prev = get_from_ring(self.__path, i, -1)
-                s_past = get_from_ring(self.__path, i, 1)
+                s_prev = get_from_ring(self.path, i, -1)
+                s_past = get_from_ring(self.path, i, 1)
                 p1, c, p2,  dir = s.round(s_prev.p1, s.center, s_past.p2, s.radius) #скругляем
                 s.p1 = p1
                 s.p2 = p2
                 s_prev.p2 = p2
-                s_past.p1 = p1
+                s_past.p1 = p1                
+
 
     def __get_segment(self, p1, p2, p3=None):
         '''return кортеж Point'''
@@ -336,16 +327,23 @@ if __name__ == '__main__':
     v.point(45, 20,  radius=-3)
     v.point(60, 10,  radius=5)
     v.point(65, 40,  rounding=3)
-    v.point(20, 40,  rounding=3)
+    v.point(20, 40)
 
-    #v.show(8)
+    v.show(8)
+
     def f():
         F(300)
         G0(0, 0, 5)
         F(1000)
+        x,  y =  v.get_first_position()
+        G0(x, y)
+
         z = -3
-        v.to_gcode(z)
+        while z > -15:
+            G1(Z=z)
+            v.to_gcode()
+            z -= 3
         G0(Z=5)
 
-    preview(f)
+#    preview(f)
 #    export(f)
