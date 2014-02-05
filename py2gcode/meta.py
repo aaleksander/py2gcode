@@ -166,16 +166,16 @@ class Meta(Trajectory):
     def point(self, x, y, radius=None, rounding=None):
         self.refPoints.append( point(x, y, radius, rounding))
 
-    def draw_points(self, canvas,  scale):
+    def draw_points(self, canvas,  scr_x,  scr_y,  scale):
         'рисуем сцену с учетом всех вращений, преобразований и сдвигов'
         #рисуем все точки в виде желтых окружностей с перекрестием
         for p in self.refPoints:
-            x = p['x']*scale
-            y = p['y']*scale
-            self.__drawPoint(x, y)
+            x = p['x']*scale + scr_x
+            y = p['y']*scale + scr_y
+            self.__drawPoint(canvas,  x, y,  scale)
             if 'radius' in p.keys():
-                r = p['radius']				
-                canvas.create_oval(x - r*scale, y - r*scale, x + r*scale, y + r*scale, outline='yellow')
+                r = p['radius'] * scale
+                canvas.create_oval(x - r,  y - r, x + r, y + r, outline='yellow')
 
         #рисуем путь
         '''
@@ -190,10 +190,9 @@ class Meta(Trajectory):
         return self.canvas #на тот случай, если кто-то еще захочет порисовать
         '''
 
-    def __drawPoint(self, x, y):
-        size = 5
-        self.canvas.create_line(x, y - size, x, y + size, fill='yellow')
-        self.canvas.create_line(x - size, y, x + size, y, fill='yellow')
+    def __drawPoint(self, canvas,  x, y,  size):
+        canvas.create_line(x, y - size, x, y + size, fill='yellow')
+        canvas.create_line(x - size, y, x + size, y, fill='yellow')
 
     def create_trajectory(self):
         self.points = []
@@ -213,6 +212,8 @@ class Meta(Trajectory):
                 self.points += s.to_points()
                 
             first = False
+        
+        self.update_offsets()
             
     def create_path(self):
         'создает траекторию по self.refPoints'
@@ -320,7 +321,6 @@ def point(x, y, radius = None, rounding=None):
 
 if __name__ == '__main__':
     v = Meta()
-
     v.point(20, 20,  rounding=3)
     v.point(30, 20,  rounding=3)
     v.point(30, 10,  rounding=3)
@@ -328,8 +328,13 @@ if __name__ == '__main__':
     v.point(60, 10,  radius=5)
     v.point(65, 40,  rounding=3)
     v.point(20, 40)
+    
+    v2 = Meta()
+    v2.point(30, 30,  radius=3)
+    v2.point(55, 30,  radius=5)
+    v2.jump_point(5,  [19,  70])    
 
-    v.show(8)
+    preview2D([v,  v2],  8)
 
     def f():
         F(300)
@@ -344,6 +349,16 @@ if __name__ == '__main__':
             v.to_gcode()
             z -= 3
         G0(Z=5)
+        
+        x,  y =  v2.get_first_position()
+        G0(x, y)
 
-#    preview(f)
+        z = -3
+        while z > -15:
+            G1(Z=z)
+            v2.to_gcode(z,  -11)
+            z -= 3
+        G0(Z=5)        
+
+    preview(f)
 #    export(f)

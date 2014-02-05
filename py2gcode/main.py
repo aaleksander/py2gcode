@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import dis
 from cnc import *
-from viewer import *
+from viewer3D import *
+from viewer2D import *
 
 
 __cnc__ = CNC()
@@ -55,9 +56,11 @@ def export(function):
 
 def preview(function):
 	'выводит на экран траекторию работы программы'
-	v = Viewer(function)
-	v.show()
+	Viewer3D(function).show()
 
+def preview2D(trajectoryes,  scale):
+	'выводит на экран траекторию работы программы'
+	Viewer2D(trajectoryes,  scale).show()
 
 def path(com, str):
 	'''путь на микроязыке'''

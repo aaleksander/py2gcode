@@ -3,8 +3,6 @@
 from main import *
 from math import sqrt
 
-
-
 def get_xx_yy_len(p1,  p2):    
     x1 = p1['x']
     y1 = p1['y']
@@ -32,7 +30,7 @@ class Trajectory(object):
         return p['x'],  p['y']
 
     def create_trajectory(self):
-        'создает траекторию'
+        'создает траекторию,  потом обязательно вызвать update_offsets'
         pass
         
     def create_path(self):
@@ -49,8 +47,7 @@ class Trajectory(object):
             raise Exception("Не задана вторая Z-координата для траектории с перемычками")
 
         G1(Z=z)
-        self.create_trajectory()        
-        self.__update_offsets()
+        self.create_trajectory()
         
         if len(self.jump_points) == 0:  #плоская траектория, без всяких перемычек
             for p in self.points:
@@ -87,7 +84,7 @@ class Trajectory(object):
                 self.jump_points.append({'w': w,  'start': 0,  'stop': stop})
                 self.jump_points.append({'w': w,  'start': l + start,  'stop': 0})
 
-        self.__update_offsets()
+        self.update_offsets()
 
 
     def __get_next_point(self):
@@ -163,7 +160,7 @@ class Trajectory(object):
             else:
                 yield {'type': 'f',  'x': p['x'],  'y': p['y']}
 
-    def __update_offsets(self):
+    def update_offsets(self):
          #дополним каждую точку смещением, чтобы легче было считать перемычки
         prev = self.points[0]
         prev['off'] = 0
@@ -206,11 +203,11 @@ class Trajectory(object):
         self.canvas.pack()
         self.canvas.delete('all')
 
-        self.draw_points(self.canvas,  scale) #рисуем опорные точки
-        
+        self.draw_points(self.canvas) #рисуем опорные точки
+
         #расчитаем траекторию и перемычки
         self.create_trajectory()
-        self.__update_offsets()
+        
 
         #рисуем
         prev = None
@@ -224,29 +221,58 @@ class Trajectory(object):
             else:  #перемычка
                 col = 'green' 
                 w = 5
-            self.canvas.create_line(prev['x']*scale,  prev['y']*scale,  p['x']*scale,  p['y']*scale,  fill=col,  width=w) 
+            self.canvas.create_line(prev['x'],  prev['y'],  p['x'],  p['y'],  fill=col,  width=w) 
             prev = p
 
+        self.canvas.scale("all",  0,  0,  scale,   scale)
         #главный цикл приложения
         self.root.mainloop()
+
+    def draw(self,  canvas,  scr_x, scr_y,  scale):
+        self.draw_points(canvas,  scr_x,  scr_y,  scale) #рисуем опорные точки
+        #расчитаем траекторию и перемычки
+        self.create_trajectory()
+        #рисуем
+        prev = None
+        for p in self.__get_next_point():
+            if p['x'] == None:
+                continue
+            if prev == None:
+                prev = p
+                continue
+            if p['type'] == 'f': #подача
+                col = 'red'
+                w = 2
+            else:  #перемычка
+                col = 'green' 
+                w = 5
+            canvas.create_line(prev['x']*scale + scr_x,  
+                               prev['y']*scale + scr_y,  
+                               p['x']*scale + scr_x,  
+                               p['y']*scale + scr_y,  fill=col,  width=w) 
+            prev = p
 
 
 if __name__ == '__main__':
     from meta import *
     v = Meta()
 
-    v.point(20, 20,  rounding=3)
-    v.point(30, 20,  rounding=3)
-    v.point(30, 10,  rounding=3)
-    v.point(45, 20,  radius=-3)
-    v.point(60, 10,  radius=5)
-    v.point(65, 40)
-    v.point(20, 40,  rounding=3)
+    v.point(0, 0,  rounding=5)
+    v.point(50, 0,  rounding=5)
+    v.point(50, 20)
+    v.point(40, 30)
+    v.point(50, 100,  rounding=5)    
+    v.point(0, 100,  rounding=5) 
+    v.point(-50,  50,  radius=-60)        
+
 
 #TODO: добавить возможность ставить перемычку на 0
-    v.jump_point(5, [15,  38,  70,  95]) #перемычки, толщиной 5 мм
+    #v.jump_point(5, [10,  38,  70,  95]) #перемычки, толщиной 5 мм
+#    v.jump_point(5, [10,  38,  70,  95]) #перемычки, толщиной 5 мм
 
-    v.show(10) #показать плоскую траекторию в 10х кратном увеличении
+    preview2D([v],  4)
+
+#    v.show(10) #показать плоскую траекторию в 10х кратном увеличении
 
     def f():
         F(300)
@@ -256,11 +282,10 @@ if __name__ == '__main__':
         G0(x, y)
 
         z = -3
-        while z > -10:
-            
+        while z > -10:            
             v.to_gcode(z,  -7.5)
             z -= 1
         G0(Z=5)
 
-    preview(f)
-    export(f)
+#    preview(f)
+    #export(f)
