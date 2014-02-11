@@ -33,11 +33,7 @@ class Trajectory(object):
         'создает траекторию,  потом обязательно вызвать update_offsets'
         pass
         
-    def create_path(self):
-        'рисует путь,  как он есть'
-        pass
-
-    def draw_points(self,  canvas):
+    def draw_points(self, canvas,  scr_x,  scr_y,  scale):
         'рисует опорные точки'
         pass
 
@@ -91,12 +87,14 @@ class Trajectory(object):
         'возвращает точки по одной с указанием типа (перемычка или просто подача) '
         #объединяем перемычки и точки
         #уберем из траектории отрезки повторяющейся длины
+        if len(self.points) == 0:
+            return
         prev = self.points[0]
         tmp = [prev]        
         for p in self.points[1:]:
-            len = get_len(prev,  p)
-                
-            if len != 0:
+            len2 = get_len(prev,  p)
+
+            if len2 != 0:
                 tmp.append(p)
             prev = p
         self.points = tmp
@@ -139,12 +137,12 @@ class Trajectory(object):
         for p in list[1:]:
             if 'type' in p.keys(): #перемычка
                 next = get_point(i + 1)
-                x1,  y1,  x2,  y2,  len = get_xx_yy_len(prev,  next)
+                x1,  y1,  x2,  y2,  len2 = get_xx_yy_len(prev,  next)
 
                 o = p['off'] - prev['off']
-                if o == 0 or len == 0:
+                if o == 0 or len2 == 0:
                     continue
-                do = len/o                
+                do = len2/o                
                 
                 x = x1 + (x2 - x1)/do
                 y = y1 + (y2 - y1)/do
@@ -234,24 +232,39 @@ class Trajectory(object):
         self.create_trajectory()
         #рисуем
         prev = None
+        ll = []
+        prev_col = None
         for p in self.__get_next_point():
             if p['x'] == None:
                 continue
             if prev == None:
+                ll.append(p['x']*scale + scr_x)
+                ll.append(p['y']*scale + scr_y)                
                 prev = p
                 continue
-            if p['type'] == 'f': #подача
+
+            if p['type'] == 'f': #подача            
                 col = 'red'
                 w = 2
             else:  #перемычка
                 col = 'green' 
                 w = 5
-            canvas.create_line(prev['x']*scale + scr_x,  
-                               prev['y']*scale + scr_y,  
-                               p['x']*scale + scr_x,  
-                               p['y']*scale + scr_y,  fill=col,  width=w) 
-            prev = p
 
+            if prev_col != col and prev_col != None : #поменялся цвет
+                canvas.create_line(ll,  fill=prev_col,  width=2, arrow = LAST, arrowshape = (10, 15, 3))
+                ll = ll[-2:] + [p['x']*scale + scr_x, p['y']*scale + scr_y]
+                #canvas.create_line(prev['x']*scale + scr_x,  
+                #                   prev['y']*scale + scr_y,  
+                #                   p['x']*scale + scr_x,  
+                #                   p['y']*scale + scr_y,  fill=col,  width=w, arrow = LAST, arrowshape = (10, 15, 3))
+            else:
+                ll.append(p['x']*scale + scr_x)
+                ll.append(p['y']*scale + scr_y)
+            
+            prev_col = col
+            prev = p
+        #остатки
+        canvas.create_line(ll,  fill=col,  width=2, arrow = LAST, arrowshape = (10, 15, 3))
 
 if __name__ == '__main__':
     from meta import *
@@ -267,10 +280,10 @@ if __name__ == '__main__':
 
 
 #TODO: добавить возможность ставить перемычку на 0
-    #v.jump_point(5, [10,  38,  70,  95]) #перемычки, толщиной 5 мм
+    v.jump_point(5, [10,  38,  70,  95]) #перемычки, толщиной 5 мм
 #    v.jump_point(5, [10,  38,  70,  95]) #перемычки, толщиной 5 мм
 
-    preview2D([v],  4)
+    preview2D(v,  4)
 
 #    v.show(10) #показать плоскую траекторию в 10х кратном увеличении
 

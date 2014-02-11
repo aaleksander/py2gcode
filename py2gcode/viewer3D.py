@@ -72,8 +72,8 @@ class Viewer3D:
         self._zoom = 70
 
         #размеры холста
-        self.size_x = 640
-        self.size_y = 480
+        self.size_x = 1300
+        self.size_y = 1000
 
         #вращение
         self.rot_x = -120

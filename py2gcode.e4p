@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project py2gcode -->
-<!-- Saved: 2014-02-07, 17:49:11 -->
+<!-- Saved: 2014-02-10, 10:47:52 -->
 <!-- Copyright (C) 2014 ,  -->
 <Project version="4.6">
   <Language>en</Language>
@@ -32,6 +32,7 @@
     <Source>py2gcode/viewer3D.py</Source>
     <Source>py2gcode/viewer2D.py</Source>
     <Source>py2gcode/bezier.py</Source>
+    <Source>py2gcode/svg.py</Source>
   </Sources>
   <Forms>
   </Forms>

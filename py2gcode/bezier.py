@@ -39,8 +39,6 @@ if __name__ == '__main__':
     
     ts = [t/100.0 for t in range(101)]
 
-
-
     from Tkinter import *
     root = Tk()
 
@@ -70,28 +68,5 @@ if __name__ == '__main__':
 
     root.mainloop()
 
-    '''
-    im = Image.new('RGBA', (100, 100), (0, 0, 0, 0)) 
-    draw = ImageDraw.Draw(im)
-    ts = [t/100.0 for t in range(101)]
 
-    xys = [(50, 100), (80, 80), (100, 50)]
-    bezier = make_bezier(xys)
-    points = bezier(ts)
-
-    xys = [(100, 50), (100, 0), (50, 0), (50, 35)]
-    bezier = make_bezier(xys)
-    points.extend(bezier(ts))
-
-    xys = [(50, 35), (50, 0), (0, 0), (0, 50)]
-    bezier = make_bezier(xys)
-    points.extend(bezier(ts))
-
-    xys = [(0, 50), (20, 80), (50, 100)]
-    bezier = make_bezier(xys)
-    points.extend(bezier(ts))
-
-    draw.polygon(points, fill = 'red')
-    im.save('out.png')
-    '''
 

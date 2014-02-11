@@ -15,7 +15,12 @@ class Viewer2D:
     'Просмотрщик'
     def __init__(self,  trajectoryes,  scale):
         'задаем на вход массив траекторий'
-        self._trajectoryes = trajectoryes
+        
+        #возможность принимать на вход не массив, а одинокую траекторию
+        if isinstance(trajectoryes, list):
+            self._trajectoryes = trajectoryes
+        else:
+            self._trajectoryes = [trajectoryes]
         #последние мышиные координаты
         self.last_x = -1
         self.last_y = -1
@@ -33,8 +38,7 @@ class Viewer2D:
         #инициализация интерфейса
         self.root = Tk()
 
-        self.root.title("Simple Graph")
-        
+        self.root.title("Simple Graph")        
         
         self.c = Canvas(self.root, bg="white", width=self.size_x, height=self.size_y)
         self.c.configure(background='black')

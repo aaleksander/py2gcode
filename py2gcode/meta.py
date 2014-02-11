@@ -212,9 +212,9 @@ class Meta(Trajectory):
                 self.points += s.to_points()
                 
             first = False
-        
+
         self.update_offsets()
-            
+
     def create_path(self):
         'создает траекторию по self.refPoints'
         self.path = []
@@ -321,6 +321,7 @@ def point(x, y, radius = None, rounding=None):
 
 if __name__ == '__main__':
     v = Meta()
+    '''
     v.point(20, 20,  rounding=3)
     v.point(30, 20,  rounding=3)
     v.point(30, 10,  rounding=3)
@@ -334,7 +335,14 @@ if __name__ == '__main__':
     v2.point(55, 30,  radius=5)
     v2.jump_point(5,  [19,  70])    
 
-    preview2D([v,  v2],  8)
+    preview2D([v,  v2],  8)'''
+    v.point(17, 18)
+    v.point(63, -92)
+    v.point(166, -61)
+    v.point(210, 93)
+    
+    
+    preview2D(v,  1)
 
     def f():
         F(300)
@@ -350,15 +358,6 @@ if __name__ == '__main__':
             z -= 3
         G0(Z=5)
         
-        x,  y =  v2.get_first_position()
-        G0(x, y)
-
-        z = -3
-        while z > -15:
-            G1(Z=z)
-            v2.to_gcode(z,  -11)
-            z -= 3
-        G0(Z=5)        
 
     preview(f)
 #    export(f)
