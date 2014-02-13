@@ -42,5 +42,5 @@ def f2():
     
 
 print("g21 g64 g90")
-preview(f2)
+#preview(f2)
 export(f2)
