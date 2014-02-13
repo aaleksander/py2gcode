@@ -19,6 +19,11 @@ def cnc(function):
 		return __cnc__.gcode()	
 	return wrap
 
+def get_font(str):
+    import sys
+    return sys.modules["py2gcode.Fonts." + str]
+    #return __import__("py2gcode.Fonts." + str)
+
 def programm(function):
 	'возвращает программу в виде массива'
 	function()
@@ -69,13 +74,18 @@ def path(com, str):
 
 #всякие команды
 def G0(X = None, Y = None, Z = None): 
-	'быстрое перемещение'
-	__cnc__.G0(X, Y, Z)
+    'быстрое перемещение'
+    __cnc__.G0(X, Y, Z)
 
+    #print "G0 ", X, Y, Z
+    
 def G1(X = None, Y = None, Z = None): 
-	'рабочее перемещение'
-	__cnc__.G1(X, Y, Z)
+    'рабочее перемещение'
+    __cnc__.G1(X, Y, Z)
+    
+    #print "G1 ", X, Y, Z
 
 def F(value):
-	__cnc__.F(value)
+    __cnc__.F(value)
 
+    #print "F ", value

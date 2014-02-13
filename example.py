@@ -2,7 +2,7 @@
 
 #подключаем библиотеку
 from py2gcode import *
-
+from py2gcode.Fonts import arial
 
 def drill(x, y):
 	G0(X=x, Y=y, Z=-1)
@@ -10,40 +10,37 @@ def drill(x, y):
 		circle(x, y, z, 2)	
 	G0(Z=-20)
 
-def cut(x1, y1, x2, y2, z1, z2, step):
-	'прорезает щель с постепенным погружением'
-	G1(X=x1, Y=y1, Z=z1)
-	for z in xrange(z1, z2, step*2):
-		G1(Z=z + step/2)
-		G1(X=x2, Y=y2)
-		G1(Z = z + step)
-		G1(x1, y1)
-
 #вырежем решетку
 def f():
-	G0(X=0, Y=0, Z=0)
+    m = Meta()
+    m.point(0, 0)
+    m.point(100, 0)
+    m.point(100, 100)
+    m.point(0, 100)
+    m.jump_point(5, [10, 90, 40, 60])
 
-	dep = -4
+    G0(0, 0, 5)
+    c = Strategy()
+    c.cut_on_line(m, -5, -10, 1, 5, Tool())
 
-	while dep > -9:
-		G1(Z= dep)
 
-		for x in xrange(3, 45, 6):
-			G1(Y=75)
-			G1(X=x)
-			G1(Y=0)
-			G1(X=x + 3)		
-		G1(Y=75)
-		G1(X=0)
-		G0(Z=0)
-		G0(X=42, Y=0)
-		G1(Z=dep)
-		G1(X=0)
-		dep -= 1
-	G0(0, 0, 0)
+def f2():
+    G0(0, 0, 5)
+    font = get_font("arial")
+    t = TextTrajectory(font, "Иван Вячеславович")
+    sz = 5
+    t.grav(0, 0, -1, sz, 500, 3)
+
+    G0(0, 0)
+    x1, y1, x2, y2 = t.get_rect(0, 0, 3)
+    G0(x1, y1)
+    G1(Z=-1)
+    G1(x2, y1)
+    G1(x2, y2)
+    G1(x1, y2)
+    G1(x1, y1)
+    
 
 print("g21 g64 g90")
-print("F200")
-export(f)
-
-print "M2"
+preview(f2)
+export(f2)

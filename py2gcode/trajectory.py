@@ -20,6 +20,14 @@ class Trajectory(object):
         self.points = [] #это уже готовые точки, по которым пойдет фреза. Словарик вида {x, y}
         self.jump_points = []
 
+    def get_last_position(self):
+        if len(self.points) == 0:
+            self.create_trajectory()
+        if len(self.points) == 0:
+            raise Exception("Метод create_trajectory не переопределен")
+        p = self.points[-1:][0]
+        return p['x'],  p['y']
+
     def get_first_position(self):
         'получить первую точку траектории'
         if len(self.points) == 0:
@@ -50,7 +58,7 @@ class Trajectory(object):
                 G1(p['x'],  p['y'])
         else: #код с учетом перемычек
             curr_z = z
-            for p in self.__get_next_point():                
+            for p in self.get_next_point():                
                 if p['type'] == 'f':
                     if curr_z != z: #чтобы бесконечно не гонять G1 Z
                         G1(Z = z)
@@ -82,11 +90,32 @@ class Trajectory(object):
 
         self.update_offsets()
 
+    def to_left(self):
+        'смещает всю траекторию к нулю'
+        if len(self.points) == 0:
+            self.create_trajectory()
+        #находим крайнюю левую точку
+        mx = self.min_x()
 
-    def __get_next_point(self):
+        for p in self.points:
+            p['x'] -= mx
+
+    def min_x(self):
+        return min([x['x'] for x in self.points])
+    
+    def max_x(self):
+        return max([x['x'] for x in self.points])
+
+    def width(self):
+        'определяет ширину символа'
+        if len(self.points) == 0:
+            self.create_trajectory()
+        return self.max_x() - self.min_x()
+
+    def get_next_point(self):
         'возвращает точки по одной с указанием типа (перемычка или просто подача) '
         #объединяем перемычки и точки
-        #уберем из траектории отрезки повторяющейся длины
+        #уберем из траектории отрезки нулевой длины
         if len(self.points) == 0:
             return
         prev = self.points[0]
@@ -98,15 +127,15 @@ class Trajectory(object):
                 tmp.append(p)
             prev = p
         self.points = tmp
-        
+
         #сделаем из перемычек, список точек
         jp = []
         for j in self.jump_points:
             jp.append({'x': None,  'y': None,  'off': j['start'],  'type': 'start'})#,  '_____*****_____':1})
             jp.append({'x': None,  'y': None,  'off': j['stop'],  'type': 'stop'})#,  '_____*****_____':1})
-        list = self.points + jp        
-        
+        list = self.points + jp
         list = sorted(list,  lambda a,  b: 1 if a['off'] > b['off'] else -1) #сортируем по возрастанию off
+        
         type = None
         for p in list:
             if 'type' in p.keys():
@@ -132,10 +161,11 @@ class Trajectory(object):
                 i += 1
             return None
             
+        #внедряем перемычки в траекторию
         prev = list[0] #предыдущая найденная точка
         i = 0
         for p in list[1:]:
-            if 'type' in p.keys(): #перемычка
+            if 'type' in p.keys() and p['type'] in ['start', 'stop']: #перемычка
                 next = get_point(i + 1)
                 x1,  y1,  x2,  y2,  len2 = get_xx_yy_len(prev,  next)
 
@@ -151,21 +181,23 @@ class Trajectory(object):
                 
             prev = p
             i += 1
-        
+        #выдаем точки по одной
         for p in list:
             if 'type' in p.keys() and p['type'] in ['stop',  'between']:
-                yield {'type': 'j',  'x': p['x'],  'y': p['y']}
+                yield {'type': 'j',  'x': p['x'],  'y': p['y']} #перемычка
             else:
-                yield {'type': 'f',  'x': p['x'],  'y': p['y']}
+                yield {'type': 'f',  'x': p['x'],  'y': p['y']} #обычный пробег
 
     def update_offsets(self):
          #дополним каждую точку смещением, чтобы легче было считать перемычки
+        if len(self.points) == 0:
+            return
         prev = self.points[0]
         prev['off'] = 0
         off=0
         for p in self.points[1:]:
-            len = get_len(prev,  p) #длина нового отрезка
-            off += len
+            l = get_len(prev,  p) #длина нового отрезка
+            off += l
             p['off'] = off
 
             prev = p
@@ -234,12 +266,12 @@ class Trajectory(object):
         prev = None
         ll = []
         prev_col = None
-        for p in self.__get_next_point():
+        for p in self.get_next_point():
             if p['x'] == None:
                 continue
             if prev == None:
                 ll.append(p['x']*scale + scr_x)
-                ll.append(p['y']*scale + scr_y)                
+                ll.append(p['y']*scale + scr_y)
                 prev = p
                 continue
 
