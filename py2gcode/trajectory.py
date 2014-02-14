@@ -90,21 +90,66 @@ class Trajectory(object):
 
         self.update_offsets()
 
-    def to_left(self):
-        'смещает всю траекторию к нулю'
+    def to_first_point(self):
+        'сдвигает траекторию так, чтобы первая точка начиналась с нуля'
+        if len(self.points) == 0:
+            self.create_trajectory()
+            
+        x0, y0 = self.points[0]['x'], self.points[0]['y']
+        
+        for p in self.points:
+            p['x'] -= x0
+            p['y'] -= y0
+        
+        return x0, y0
+
+    def mirror_y(self):
+        'отразить по y'
+        if len(self.points) == 0:
+            self.create_trajectory()
+        
+        for p in self.points:
+            p['y'] = -p['y']
+    def to_zero(self):
+        'сдвигает обе координаты к нулям'
+        x = self.to_left()
+        y = self.to_bottom()
+        return x, y
+
+    def to_left(self, mx=None):
+        'смещает всю траекторию к нулю по x или на заданную координату'
         if len(self.points) == 0:
             self.create_trajectory()
         #находим крайнюю левую точку
-        mx = self.min_x()
+        if mx == None:
+            mx = self.min_x()
 
         for p in self.points:
             p['x'] -= mx
+            
+        return mx
+            
+    def to_bottom(self, my=None):
+        'смещает всю траекторию к нулю по y или на заданную координату'
+        if len(self.points) == 0:
+            self.create_trajectory()
+        #находим крайнюю левую точку
+        if my == None:
+            my = self.min_y()
+
+        for p in self.points:
+            p['y'] -= my        
+            
+        return my
+    
+    def min_y(self):
+        return min([p['y'] for p in self.points])
 
     def min_x(self):
-        return min([x['x'] for x in self.points])
+        return min([p['x'] for p in self.points])
     
     def max_x(self):
-        return max([x['x'] for x in self.points])
+        return max([p['x'] for p in self.points])
 
     def width(self):
         'определяет ширину символа'

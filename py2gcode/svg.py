@@ -17,8 +17,6 @@ class SvgTrajectory(Trajectory):
             self.commands[0]['params'][0] = (x + x_off, y + y_off)
             #self.commands[0]['params'] = [(x_off, y_off)] + self.commands[0]['params'][1:]
             #str = "m %(a)s,%(b)s" % {'a': x_off, 'b': y_off} + str[1:]
-        
-            
         self.points = []
 
     def __str__(self):

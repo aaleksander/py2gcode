@@ -25,10 +25,20 @@ class Strategy:
             self.__one_z_level(trajectory, tool, z, z_stop + 1.5)
             z -= z_step
 
-    def grav(self, tr, tool, x, y, z, scale=1):
+    def grav(self, tr, tool, x, y, z, scale=1, angle=None):
         'гравируем без всяких перемычек и прочего'
+        #если задан угол, то попорачиваем
+        def xy(xx, yy): #считает координута с учетом всех параметров
+            rx, ry = xx, yy
+            if angle != None:
+                nx = rx*cos(angle) - ry*sin(angle)
+                ny = rx*sin(angle) + ry*cos(angle)
+                rx, ry = nx, ny
+            return rx*scale + x, ry*scale + y
+            
         fx, fy = tr.get_first_position()
-        G0(fx*scale + x, fy*scale + y)
+        fx, fy = xy(fx, fy)
+        G0(fx, fy)
         #погружаемся
         F(tool.FZ)
         G1(Z=z)
@@ -36,7 +46,8 @@ class Strategy:
         points = tr.get_next_point() 
         points.next()  #первую точку пропускаем, мы взяли ее с помощью get_first_position
         for p in points:
-            G1(p['x']*scale + x,  p['y']*scale + y)
+            xx, yy = xy(p['x'], p['y'])
+            G1(xx,  yy)
 
     def __one_z_level(self, trajectory, tool, z, z_up=None):
         x, y = trajectory.get_first_position()
