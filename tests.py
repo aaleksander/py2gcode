@@ -6,7 +6,6 @@ import unittest
 
 
 class TestGCodes(unittest.TestCase):
-
     def setUp(self):
         pass
 

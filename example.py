@@ -31,17 +31,6 @@ def f2():
     sz = 5
     t.grav(0, 0, -1, sz, 500, 3)
 
-    '''
-    G0(0, 0)
-    x1, y1, x2, y2 = t.get_rect(0, 0, 3)
-    G0(x1, y1)
-    G1(Z=-1)
-    G1(x2, y1)
-    G1(x2, y2)
-    G1(x1, y2)
-    G1(x1, y1)
-    '''
-    
 
 print("g21 g64 g90")
 preview(f2)

@@ -268,41 +268,6 @@ class Trajectory(object):
 
         return res
 
-    def show(self, scale = 1):
-        'предварительный просмотр траектории'
-        self.root = Tk()
-
-        self.root.title("MetaViewer")
-        self.canvas = Canvas(self.root, bg="white", width=640, height=480)
-        self.canvas.configure(background='black', width=1000, height=600)
-        self.canvas.pack()
-        self.canvas.delete('all')
-
-        self.draw_points(self.canvas) #рисуем опорные точки
-
-        #расчитаем траекторию и перемычки
-        self.create_trajectory()
-        
-
-        #рисуем
-        prev = None
-        for p in self.__get_next_point():
-            if prev == None:
-                prev = p
-                continue
-            if p['type'] == 'f': #подача
-                col = 'red'
-                w = 2
-            else:  #перемычка
-                col = 'green' 
-                w = 5
-            self.canvas.create_line(prev['x'],  prev['y'],  p['x'],  p['y'],  fill=col,  width=w) 
-            prev = p
-
-        self.canvas.scale("all",  0,  0,  scale,   scale)
-        #главный цикл приложения
-        self.root.mainloop()
-
     def draw(self,  canvas,  scr_x, scr_y,  scale):
         self.draw_points(canvas,  scr_x,  scr_y,  scale) #рисуем опорные точки
         #расчитаем траекторию и перемычки
@@ -330,10 +295,6 @@ class Trajectory(object):
             if prev_col != col and prev_col != None : #поменялся цвет
                 canvas.create_line(ll,  fill=prev_col,  width=2, arrow = LAST, arrowshape = (10, 15, 3))
                 ll = ll[-2:] + [p['x']*scale + scr_x, p['y']*scale + scr_y]
-                #canvas.create_line(prev['x']*scale + scr_x,  
-                #                   prev['y']*scale + scr_y,  
-                #                   p['x']*scale + scr_x,  
-                #                   p['y']*scale + scr_y,  fill=col,  width=w, arrow = LAST, arrowshape = (10, 15, 3))
             else:
                 ll.append(p['x']*scale + scr_x)
                 ll.append(p['y']*scale + scr_y)

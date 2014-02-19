@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project py2gcode -->
-<!-- Saved: 2014-02-13, 17:54:31 -->
+<!-- Saved: 2014-02-14, 15:57:52 -->
 <!-- Copyright (C) 2014 ,  -->
 <Project version="4.6">
   <Language>en</Language>
@@ -39,6 +39,7 @@
     <Source>py2gcode/group_trajectory.py</Source>
     <Source>py2gcode/Fonts/arial.py</Source>
     <Source>py2gcode/Fonts/__init__.py</Source>
+    <Source>phishka.py</Source>
   </Sources>
   <Forms>
   </Forms>

@@ -27,19 +27,22 @@ def get_from_ring(l, i, off):
     return l[o]
 
 #типы сегментов
-SEG_LINE	= 1 #прямая лини
-SEG_ARC 	= 2 #дуга
-SEG_ROUND	= 3 #дуга на углу
+SEG_LINE	   = 1 #прямая лини
+SEG_ARC 	   = 2 #дуга
+SEG_ROUND   = 3 #дуга на углу
+SEG_CORNER  = 4 #запил для прямого угла (стык шипа)
+
 class Segment:
     '''
         Один сегмент траетории
     '''
     def __init__(self, type, p1, p2, center = None, radius = None):
-        'создает сегмент типа дуга, p1, p2 - начало конец, p3 - центр'
+        'создает сегмент типа дуга (или любой другой, требующий дополнительные точки), p1, p2 - начало конец, center - центр'
         self.type = type
         self.p1 = p1.copy()
         self.p2 = p2.copy()
         self.center = None
+        self.corn_center = None
         if center != None:
             self.center = center.copy()
         self.radius = None
@@ -97,19 +100,26 @@ class Segment:
 
         if self.type == SEG_ARC: #скругляем дугу относительно центра
             res = get_line_for_arc(self.p1, self.center, self.p2,  self.radius > 0)
-        else: #простое скругление угла
+        if self.type == SEG_ROUND: #простое скругление угла
             p1,  cr,  p2,  dir = self.round(self.p1,  self.center,  self.p2,  self.radius)
 
             if dir == True:
                 res = get_line_for_arc(p1, cr, p2,  dir)
             else:
                 res = get_line_for_arc(p2, cr, p1,  dir)
+        
+        if self.type == SEG_CORNER:
+            #cr = self.corner(self.p1,  self.center,  self.p2,  self.radius)
+            #print cr
+            #res = [cr.x, cr.y, self.center.x, self.center.y]
+            res = [self.corn_center.x, self.corn_center.y, self.center.x, self.center.y]
+
         return res
 
     def round(self, p1, c, p2, r):
         '''      Скругляет угол с заданым радиусом
                 Получает на вход p1, center, p2, radius
-                возвращает [p1, center, p2], готовое для скармливания get_line_for_arc '''        
+                возвращает [p1, center, p2], готовое для скармливания get_line_for_arc '''
         a1 = get_angle(p1, c, p1, Point(p1.x + 100, p1.y))
         a2 = get_angle(p1, c, c, p2)
         rr1 = self.__get_border(p1, c, r)
@@ -128,6 +138,28 @@ class Segment:
             return (pp[0],  cr,  pp[1],  dir)
         else:
             return (pp[1],  cr,  pp[0],  dir)
+            
+    def corner(self, p1, c, p2, r):
+        'зарезаем угол для прямого шипа'
+        #print p1
+        #print c
+        #print p2
+        a1 = get_angle(p1, c, p1, Point(p1.x + 100, p1.y))
+        a2 = get_angle(p1, c, c, p2)
+        rr1 = self.__get_border(p1, c, r)
+        rr2 = self.__get_border(c, p2, r)
+        
+        if a2 <= pi:
+            cr = get_cross_point(rr1[2], rr1[3], rr2[2], rr2[3])
+            dir = True
+        else:
+            cr = get_cross_point(rr1[0], rr1[1], rr2[0], rr2[1])
+            dir = False
+
+        if dir:
+            return cr
+        else:
+            return cr
 
     def __get_border(self, p1, p2, w):
         'возвращает координаты прямоугольника, описанного вокруг отрезка'
@@ -163,8 +195,8 @@ class Meta(Trajectory):
         
         self.refPoints = [] #опорные точки
 
-    def point(self, x, y, radius=None, rounding=None):
-        self.refPoints.append( point(x, y, radius, rounding))
+    def point(self, x, y, radius=None, rounding=None, corner=None):
+        self.refPoints.append( point(x, y, radius, rounding, corner))
 
     def draw_points(self, canvas,  scr_x,  scr_y,  scale):
         'рисуем сцену с учетом всех вращений, преобразований и сдвигов'
@@ -176,19 +208,6 @@ class Meta(Trajectory):
             if 'radius' in p.keys():
                 r = p['radius'] * scale
                 canvas.create_oval(x - r,  y - r, x + r, y + r, outline='yellow')
-
-        #рисуем путь
-        '''
-        for s in self.path:
-            if s.type == SEG_LINE:
-                self.canvas.create_line(s.p1.x*scale, s.p1.y*scale, s.p2.x*scale, s.p2.y*scale, fill='red',  width=2)
-            if s.type == SEG_ARC:
-                self.canvas.create_line(map(lambda x: x*scale, s.get_lines()), fill='red',  width=2)#, arrow = LAST, arrowshape = (15, 20, 5))
-            if s.type == SEG_ROUND:
-                self.canvas.create_line(map(lambda x: x*scale, s.get_lines(self.canvas)), fill='red',  width=2)#, arrow = LAST, arrowshape = (15, 20, 5))
-
-        return self.canvas #на тот случай, если кто-то еще захочет порисовать
-        '''
 
     def __drawPoint(self, canvas,  x, y,  size):
         canvas.create_line(x, y - size, x, y + size, fill='yellow')
@@ -208,6 +227,11 @@ class Meta(Trajectory):
             if s.type == SEG_ARC:
                 self.points += s.to_points()
                 self.points.append(point (s.p2.x,  s.p2.y))# {'x': s.p2.x,  'y':s.p2.y})
+                
+            if s.type == SEG_CORNER:
+                self.points += s.to_points()
+                #self.points.append(point(s.center.x, s.center.y))
+                
             if s.type == SEG_ROUND:
                 self.points += s.to_points()
                 
@@ -235,6 +259,9 @@ class Meta(Trajectory):
                 if isRound(prev) and first == False:#скругляем угол
                     self.path.append(Segment(SEG_ROUND, p, p, prevO, prev['round']))
 
+                if isCorner(prev) and first == False: #запил угла
+                    self.path.append(Segment(SEG_CORNER, prev, prev, Point(prev['x'], prev['y']), prev['corner']))
+
                 self.path.append(Segment(SEG_LINE, pp[0], pp[1]))
                 prevO = pp[1].copy()
 
@@ -249,6 +276,9 @@ class Meta(Trajectory):
 
         if isRound(prev):#скругляем угол
             self.path.append(Segment(SEG_ROUND, p, p, prevO, prev['round']))
+
+        if isCorner(prev):#скругляем угол
+            self.path.append(Segment(SEG_CORNER, p, p, prevO, prev['corner']))
 
         self.path.append(Segment(SEG_LINE, pp[0], pp[1]))
 
@@ -266,8 +296,18 @@ class Meta(Trajectory):
                 s.p1 = p1
                 s.p2 = p2
                 s_prev.p2 = p2
-                s_past.p1 = p1                
+                s_past.p1 = p1       
+            if s.type == SEG_CORNER:
+                s_prev = get_from_ring(self.path, i, -1)
+                s_past = get_from_ring(self.path, i, 1)
 
+                c = s.corner(s_prev.p1, s.center, s_past.p2, s.radius) #запиливаемся
+                s.p1 = s_prev.p1
+                s.p2 = s_past.p2
+                s.corn_center = c
+                s.center = s.center
+
+                print c
 
     def __get_segment(self, p1, p2, p3=None):
         '''return кортеж Point'''
@@ -305,17 +345,23 @@ def dict2object(o):
 
 def isCircle(p):
     return 'radius' in p.keys()
+    
+def isCorner(p):
+    return 'corner' in p.keys()    
 
 def isRound(p):
     return 'round' in p.keys()
 
-def point(x, y, radius = None, rounding=None):
+def point(x, y, radius = None, rounding=None, corner=None):
     'создает словарик для точки'
     res = {'x': x, 'y': y}
     if radius != None:
         res['radius'] = radius
     if rounding != None:
         res['round'] = rounding
+    if corner != None:
+        res['corner'] = corner
+        
 
     return res
 
@@ -336,28 +382,31 @@ if __name__ == '__main__':
     v2.jump_point(5,  [19,  70])    
 
     preview2D([v,  v2],  8)'''
-    v.point(17, 18)
-    v.point(63, -92)
-    v.point(166, -61)
-    v.point(210, 93)
+    v.point(0, 0)
+    v.point(200, 0)
+    
+    v.point(200, 70)
+    v.point(170, 70, corner=3)
+    v.point(170, 120, corner=3)
+    v.point(200, 120)
+    
+    v.point(200, 200)
+    v.point(0, 200)
+    v.point(0, 120, corner=3)
+    v.point(-30, 120)
+    v.point(-30, 70)
+    v.point(0, 70, corner=3)
     
     
-    preview2D(v,  1)
+    
 
+    preview2D(v,  2)
+    
     def f():
-        F(300)
         G0(0, 0, 5)
-        F(1000)
-        x,  y =  v.get_first_position()
-        G0(x, y)
-
-        z = -3
-        while z > -15:
-            G1(Z=z)
-            v.to_gcode()
-            z -= 3
-        G0(Z=5)
+        v.to_gcode(-5)
+        
         
 
     preview(f)
-#    export(f)
+    export(f)

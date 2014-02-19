@@ -11,7 +11,7 @@ class SvgTrajectory(Trajectory):
         super(SvgTrajectory,  self).__init__()
        
         self.commands = parse_full_svg(str)
-        
+
         if x_off != None and self.commands[0]['com'] != 'M': #если есть смещение, то подменяем первую команду
             x, y = self.commands[0]['params'][0]
             self.commands[0]['params'][0] = (x + x_off, y + y_off)
