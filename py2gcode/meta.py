@@ -363,6 +363,30 @@ def point(x, y, radius = None, rounding=None, corner=None):
 
     return res
 
+
+from Tkinter import *
+class Test(Text):
+    def __init__(self, master, **kw):
+        Text.__init__(self, master, **kw)
+        self.bind('<Control-c>', self.copy)
+        self.bind('<Control-x>', self.cut)
+        self.bind('<Control-v>', self.paste)
+        
+    def copy(self, event=None):
+        self.clipboard_clear()
+        text = self.get("sel.first", "sel.last")
+        self.clipboard_append(text)
+    
+    def cut(self, event):
+        self.copy()
+        self.delete("sel.first", "sel.last")
+
+    def paste(self, event):
+        text = self.selection_get(selection='CLIPBOARD')
+        print text
+
+
+
 if __name__ == '__main__':
     v = Meta()
     '''
@@ -406,4 +430,11 @@ if __name__ == '__main__':
         v.to_gcode(-8, -5)
 
 #    preview(f)
-    export(f)
+#    export(f)
+
+    from win32clipboard import *
+    
+    
+
+
+
