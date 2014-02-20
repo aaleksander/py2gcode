@@ -79,8 +79,10 @@ def G0(X = None, Y = None, Z = None):
 
     #print "G0 ", X, Y, Z
     
-def G1(X = None, Y = None, Z = None): 
+def G1(X = None, Y = None, Z = None, F=None): 
     'рабочее перемещение'
+    if F != None:
+        __cnc__.F(F)
     __cnc__.G1(X, Y, Z)
     
     #print "G1 ", X, Y, Z

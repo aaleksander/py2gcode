@@ -162,7 +162,7 @@ def parse_params(params, x_off, y_off):
     for v in vertex:
         if len(v) > 0:
             x, y = v.split(',')
-            res.append((float(x) + x_off, float(y) + y_off))
+            res.append((float(x) + x_off, -float(y) + y_off)) #ось Y тут в другую сторону
     return res
 
 def parse_full_svg(str_svg_path, x_off = None, y_off = None):

@@ -307,8 +307,6 @@ class Meta(Trajectory):
                 s.corn_center = c
                 s.center = s.center
 
-                print c
-
     def __get_segment(self, p1, p2, p3=None):
         '''return кортеж Point'''
         if p1 == None or len(p1) == 0:
@@ -375,7 +373,7 @@ if __name__ == '__main__':
     v.point(60, 10,  radius=5)
     v.point(65, 40,  rounding=3)
     v.point(20, 40)
-    
+
     v2 = Meta()
     v2.point(30, 30,  radius=3)
     v2.point(55, 30,  radius=5)
@@ -384,29 +382,28 @@ if __name__ == '__main__':
     preview2D([v,  v2],  8)'''
     v.point(0, 0)
     v.point(200, 0)
-    
+
     v.point(200, 70)
     v.point(170, 70, corner=3)
     v.point(170, 120, corner=3)
     v.point(200, 120)
-    
+
     v.point(200, 200)
     v.point(0, 200)
     v.point(0, 120, corner=3)
     v.point(-30, 120)
     v.point(-30, 70)
     v.point(0, 70, corner=3)
-    
-    
-    
 
-    preview2D(v,  2)
-    
+    #v.jump_point(20, [10, 60])
+
+    #preview2D(v,  2)
+
     def f():
-        G0(0, 0, 5)
-        v.to_gcode(-5)
-        
-        
+        G0(-10, -10, 15)
+        G0(0, 0)
+        G1(100, 100, F=200)
+        v.to_gcode(-8, -5)
 
-    preview(f)
+#    preview(f)
     export(f)
