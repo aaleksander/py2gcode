@@ -10,10 +10,23 @@ def get_xx_yy_len(p1,  p2):
     y2 = p2['y']
     l = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))     
     return (x1,  y1,  x2,  y2,  l)
-    
+
 def get_len(p1,  p2):
     x1,  y1,  x2,  y2,  l = get_xx_yy_len(p1,  p2)
     return l
+    
+    
+def get_from_ring(l, i, off):
+    'возвращает сегмент из массива l как будто это кольцевой список, i-позиция, off - смещение относительно этой позиции'
+    o = i + off
+    if o >= len(l):
+        while o >= len(l):
+            o -= len(l)
+    else:
+        if o < 0:
+            while i<0:
+                o += len(l)
+    return l[o]
 
 class Trajectory(object):
     def __init__(self):
@@ -52,13 +65,13 @@ class Trajectory(object):
 
         G1(Z=z)
         self.create_trajectory()
-        
+
         if len(self.jump_points) == 0:  #плоская траектория, без всяких перемычек
             for p in self.points:
                 G1(p['x'],  p['y'])
         else: #код с учетом перемычек
             curr_z = z
-            for p in self.get_next_point():                
+            for p in self.get_next_point():
                 if p['type'] == 'f':
                     if curr_z != z: #чтобы бесконечно не гонять G1 Z
                         G1(Z = z)
@@ -110,6 +123,7 @@ class Trajectory(object):
         
         for p in self.points:
             p['y'] = -p['y']
+
     def to_zero(self):
         'сдвигает обе координаты к нулям'
         x = self.to_left()
@@ -193,8 +207,6 @@ class Trajectory(object):
                 if type != None:
                     p['type'] = type
                   
-       
-                
         def get_point(start): # найти ближайшую точку-не-перемычку (идя вперед)
             i = 0
             for p in list:
@@ -281,7 +293,7 @@ class Trajectory(object):
                 continue
             if prev == None:
                 ll.append(p['x']*scale + scr_x)
-                ll.append(p['y']*scale + scr_y)
+                ll.append(-p['y']*scale + scr_y)
                 prev = p
                 continue
 
@@ -294,10 +306,10 @@ class Trajectory(object):
 
             if prev_col != col and prev_col != None : #поменялся цвет
                 canvas.create_line(ll,  fill=prev_col,  width=2, arrow = LAST, arrowshape = (10, 15, 3))
-                ll = ll[-2:] + [p['x']*scale + scr_x, p['y']*scale + scr_y]
+                ll = ll[-2:] + [p['x']*scale + scr_x, -p['y']*scale + scr_y]
             else:
                 ll.append(p['x']*scale + scr_x)
-                ll.append(p['y']*scale + scr_y)
+                ll.append(-p['y']*scale + scr_y)
             
             prev_col = col
             prev = p

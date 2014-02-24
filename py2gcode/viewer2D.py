@@ -56,6 +56,9 @@ class Viewer2D:
         self.c.bind("<B1-Motion>", self.scroll)
         
         self.root.bind("<MouseWheel>", self.zoom)        
+        
+        self.scroll_y = self.size_y - 10
+        self.scroll_x = 10
 
     def zoom(self, event):
         'зуминг сцены'

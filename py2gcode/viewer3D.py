@@ -248,7 +248,7 @@ class Viewer3D:
         z = (p.Z - self.shift_z)/(self._zoom/10.)
         
 
-        t = Point_v(x, y, p.Z, p.Type)
+        t = Point_v(x, -y, p.Z, p.Type)
 
         a_x = self.rot_x/100.
         a_y = self.rot_y/100.

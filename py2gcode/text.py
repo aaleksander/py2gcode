@@ -63,14 +63,14 @@ class TextTrajectory(GroupTrajectory):
                 self.trajectories += _ch.trajectories
             prev = ch
 
-    def grav(self, x, y, z, sz, f, size):
+    def grav(self, x, yy, z, sz, f, size):
         tool = Tool()
         tool.F = f
         cutter = Strategy()
         curr_x = x
         width = 0
         prev_ch = None
-        for t in self.trajectories:       
+        for t in self.trajectories:
             if t['char'] == ' ':
                 curr_x += 3*size
                 prev_char = ' '
@@ -79,7 +79,7 @@ class TextTrajectory(GroupTrajectory):
                 curr_x += width + 1*size
                 width = 0
             G0(Z = sz)
-            cutter.grav(t['svg'], tool, curr_x, y, z, size)
+            cutter.mill(t['svg'], x = curr_x, y = yy, scale=size, options={'z': z, 'safeZ': sz})
             w = t['svg'].width()*size #выбираем максимальную ширину
             if width < w:
                 width = w

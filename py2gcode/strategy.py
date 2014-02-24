@@ -2,11 +2,45 @@
 
 from main import *
 from trajectory import *
+from tool import *
+from geometry import *
+
+default_safeZ = 5
 
 #базовый класс, генерирующий Г-код для одной траектории. Так же уже умеет вырезать по контуру
 class Strategy:
     def __init__(self):
         pass    
+
+    def offset(self, t, value):
+        '''возвращает новую траекторию с новым путем
+        t - траектория, value - на сколько надо сделать смещение. Плюс - наружу, минус - внутрь.
+        '''
+        if len(t.points) == 0:
+            t.create_trajectory()
+        res = Trajectory()
+        i = 0
+        while i < len(t.points):
+            s = Point(t.points[i]['x'], t.points[i]['y'])
+            s_prev = get_from_ring(t.refPoints, i, -1)
+            s_prev = Point(s_prev['x'], s_prev['y'])
+            s_past = get_from_ring(t.refPoints, i, 1)
+            s_past = Point(s_past['x'], s_past['y'])
+            
+            res.points.append({'x': s.x + value, 'y': s.y + value})
+
+            zero = Point(s.x + 100, s.y)
+            a = get_angle(s_prev, s, s, s_past)
+            a = a*180/3.14159265358979323
+            if a > 180: #внутренний угол
+                pass
+                #print s, a
+                #newP['radius'] = value
+
+            #res.refPoints.append(newP)
+            i += 1
+        res.update_offsets()
+        return res
 
     def cut_on_line(self, trajectory, z_start, z_stop, z_step, z_safe, tool, options=None):
         '''вырезает по средней линии
@@ -24,25 +58,36 @@ class Strategy:
         while z >= z_stop:
             self.__one_z_level(trajectory, tool, z, z_stop + 1.5)
             z -= z_step
-
-    def grav(self, tr, tool, x, y, z, scale=1, angle=None):
-        'гравируем без всяких перемычек и прочего'
-        #если задан угол, то попорачиваем
-        def xy(xx, yy): #считает координута с учетом всех параметров
+            
+    def get_xy(self, x, y, scale, angle):
+        'возвращает функцию, которая пересчитывает координаты в зависимости от всех параметров'
+        def xy(xx, yy): #считает координута с учетом всех параметров (масштаб, разворот
             rx, ry = xx, yy
             if angle != None:
                 nx = rx*cos(angle) - ry*sin(angle)
                 ny = rx*sin(angle) + ry*cos(angle)
                 rx, ry = nx, ny
             return rx*scale + x, ry*scale + y
-            
+        return xy
+
+    def mill(self, tr, tool=Tool(), x=0, y=0, scale=1, angle=None, options={}):
+        'режем без всяких перемычек и прочего'
+        #если задан угол, то поворачиваем
+        if 'safeZ' in options:
+            safeZ = options['safeZ']
+        else:
+            safeZ = default_safeZ
+        
+        xy = self.get_xy(x, y, scale, angle)
         fx, fy = tr.get_first_position()
         fx, fy = xy(fx, fy)
+        G0(Z=safeZ)
         G0(fx, fy)
-        #погружаемся
-        F(tool.FZ)
-        G1(Z=z)
-        F(tool.F)        
+        if 'z' in options:
+            #погружаемся
+            F(tool.FZ)
+            G1(Z=options['z'])
+        F(tool.F)
         points = tr.get_next_point() 
         points.next()  #первую точку пропускаем, мы взяли ее с помощью get_first_position
         for p in points:
@@ -81,3 +126,32 @@ class Strategy:
                             G0(Z = z_up)
                             curr_z = z_up
                     G1(X=p['x'],  Y=p['y'])
+
+if __name__ == '__main__':
+    from meta import Meta
+    v = Meta()
+
+    v.point(0, 0)
+    v.point(200, 0)
+
+    v.point(200, 70)
+    v.point(170, 70)
+    v.point(170, 120)
+    v.point(200, 120)
+
+    v.point(200, 200)
+    v.point(0, 200)
+    v.point(0, 120)
+    v.point(-50, 95)
+    v.point(0, 70)
+
+    #v.jump_point(20, [10, 60])
+
+    preview2D(v,  2)
+
+    def f():
+        G0(0, 0, default_safeZ)
+        cut = Strategy()
+        cut.mill(v, x=-10, y=-10, options={'z': -10})
+
+    preview(f)

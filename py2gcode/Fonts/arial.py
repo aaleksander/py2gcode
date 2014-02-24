@@ -8,7 +8,7 @@
 !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяЁё№
 '': {'path':''},
 '''
-font_offset_y = -52
+font_offset_y = 52
 
 table = {
     ' ': {'char': ' ', 'path': 'm 0,52'},

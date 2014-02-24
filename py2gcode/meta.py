@@ -4,6 +4,7 @@ from geometry import *
 from math import cos, sin
 from main import *
 from trajectory import *
+from strategy import *
 
 #построение мета-траекторий, т.е. замкнутых траекторий на основе каких-то опорных точек и с помощью "эластичной ленты" вокруг всех точек
 '''
@@ -14,17 +15,7 @@ radius - радиус точки, по умолчанию - ноль
 rouonding - скругление угла с заданным радиусом, всегда положительно
 '''
 
-def get_from_ring(l, i, off):
-    'возвращает сегмент из массива l как будто это кольцевой список, i-позиция, off - смещение относительно этой позиции'
-    o = i + off
-    if o >= len(l):
-        while o >= len(l):
-            o -= len(l)
-    else:
-        if o < 0:
-            while i<0:
-                o += len(l)
-    return l[o]
+
 
 #типы сегментов
 SEG_LINE	   = 1 #прямая лини
@@ -156,10 +147,7 @@ class Segment:
             cr = get_cross_point(rr1[0], rr1[1], rr2[0], rr2[1])
             dir = False
 
-        if dir:
-            return cr
-        else:
-            return cr
+        return cr
 
     def __get_border(self, p1, p2, w):
         'возвращает координаты прямоугольника, описанного вокруг отрезка'
@@ -192,7 +180,7 @@ class Meta(Trajectory):
     'Метатраектория'
     def __init__(self):
         super(Meta,  self).__init__()
-        
+
         self.refPoints = [] #опорные точки
 
     def point(self, x, y, radius=None, rounding=None, corner=None):
@@ -203,7 +191,7 @@ class Meta(Trajectory):
         #рисуем все точки в виде желтых окружностей с перекрестием
         for p in self.refPoints:
             x = p['x']*scale + scr_x
-            y = p['y']*scale + scr_y
+            y = -p['y']*scale + scr_y
             self.__drawPoint(canvas,  x, y,  scale)
             if 'radius' in p.keys():
                 r = p['radius'] * scale
@@ -227,14 +215,11 @@ class Meta(Trajectory):
             if s.type == SEG_ARC:
                 self.points += s.to_points()
                 self.points.append(point (s.p2.x,  s.p2.y))# {'x': s.p2.x,  'y':s.p2.y})
-                
             if s.type == SEG_CORNER:
                 self.points += s.to_points()
                 #self.points.append(point(s.center.x, s.center.y))
-                
             if s.type == SEG_ROUND:
                 self.points += s.to_points()
-                
             first = False
 
         self.update_offsets()
@@ -248,10 +233,13 @@ class Meta(Trajectory):
         first = True
         for p in self.refPoints[1:]:
             pp = self.__get_segment(prev, p) #расчитываем сегмент
-            
+
             if len(pp) == 2:
                 if isRound(prev) and first == True: #первая точка - скругление
                     self.path.append(Segment(SEG_ROUND, prev, prev, Point(prev['x'], prev['y']), prev['round']))
+
+                if isCorner(prev) and first == True: #первая точка - подрезка
+                    self.path.append(Segment(SEG_CORNER, prev, prev, Point(prev['x'], prev['y']), prev['corner']))
 
                 if isCircle(prev) and first == False:#если предыдущая точка была окружность, то вставляем дугу
                     self.path.append(Segment(SEG_ARC, prevO, pp[0], Point(prev['x'], prev['y']), prev['radius']))
@@ -277,7 +265,7 @@ class Meta(Trajectory):
         if isRound(prev):#скругляем угол
             self.path.append(Segment(SEG_ROUND, p, p, prevO, prev['round']))
 
-        if isCorner(prev):#скругляем угол
+        if isCorner(prev):#подрезаем угол
             self.path.append(Segment(SEG_CORNER, p, p, prevO, prev['corner']))
 
         self.path.append(Segment(SEG_LINE, pp[0], pp[1]))
@@ -389,50 +377,27 @@ class Test(Text):
 
 if __name__ == '__main__':
     v = Meta()
-    '''
-    v.point(20, 20,  rounding=3)
-    v.point(30, 20,  rounding=3)
-    v.point(30, 10,  rounding=3)
-    v.point(45, 20,  radius=-3)
-    v.point(60, 10,  radius=5)
-    v.point(65, 40,  rounding=3)
-    v.point(20, 40)
 
-    v2 = Meta()
-    v2.point(30, 30,  radius=3)
-    v2.point(55, 30,  radius=5)
-    v2.jump_point(5,  [19,  70])    
-
-    preview2D([v,  v2],  8)'''
-    v.point(0, 0)
-    v.point(200, 0)
-
-    v.point(200, 70)
-    v.point(170, 70, corner=3)
-    v.point(170, 120, corner=3)
-    v.point(200, 120)
-
-    v.point(200, 200)
-    v.point(0, 200)
-    v.point(0, 120, corner=3)
-    v.point(-30, 120)
-    v.point(-30, 70)
-    v.point(0, 70, corner=3)
+    v.point(0, 0, corner=10)
+    v.point(0, 100, corner=10)
+    v.point(100, 100, corner=10)
+    v.point(100, 0, corner=10)
 
     #v.jump_point(20, [10, 60])
 
     #preview2D(v,  2)
 
     def f():
-        G0(-10, -10, 15)
-        G0(0, 0)
-        G1(100, 100, F=200)
+        G0(0, 0, 15)
+        cut = Strategy()
+        #vv = cut.offset(3)
         v.to_gcode(-8, -5)
+        
 
-#    preview(f)
+    preview(f)
 #    export(f)
 
-    from win32clipboard import *
+    
     
     
 

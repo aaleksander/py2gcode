@@ -4,8 +4,8 @@ from math import *
 
 #вычислительная геометрия
 #многое взято отсюда: http://hardfire.ru/all_geom
-eps = 1e-8;
-pi = 3.14159265358979323;
+eps = 1e-8
+pi = 3.14159265358979323
 
 IN_CIRCLE 	= 0
 ON_CIRCLE 	= 1
