@@ -116,13 +116,21 @@ class Trajectory(object):
         
         return x0, y0
 
-    def mirror_y(self):
+    def mirror_y(selfm, center=0):
         'отразить по y'
         if len(self.points) == 0:
             self.create_trajectory()
         
         for p in self.points:
-            p['y'] = -p['y']
+            p['y'] = center - p['y']
+            
+    def mirror_x(selfm, center=0):
+        'отразить по x'
+        if len(self.points) == 0:
+            self.create_trajectory()
+        
+        for p in self.points:
+            p['x'] = center - p['x']            
 
     def to_zero(self):
         'сдвигает обе координаты к нулям'
@@ -280,8 +288,16 @@ class Trajectory(object):
 
         return res
 
-    def draw(self,  canvas,  scr_x, scr_y,  scale):
-        self.draw_points(canvas,  scr_x,  scr_y,  scale) #рисуем опорные точки
+    def __get_option(self, options, key, default):
+        if options == None:
+            return default
+        if not key in options:
+            return default
+        return options[key]
+
+    def draw(self,  canvas,  scr_x, scr_y,  scale, options=None):
+        if self.__get_option(options, 'hideRef', True) == False:
+            self.draw_points(canvas,  scr_x,  scr_y,  scale) #рисуем опорные точки
         #расчитаем траекторию и перемычки
         self.create_trajectory()
         #рисуем
@@ -305,7 +321,7 @@ class Trajectory(object):
                 w = 5
 
             if prev_col != col and prev_col != None : #поменялся цвет
-                canvas.create_line(ll,  fill=prev_col,  width=2, arrow = LAST, arrowshape = (10, 15, 3))
+                canvas.create_line(ll,  fill=prev_col,  width=1, arrow = LAST, arrowshape = (10, 15, 3))
                 ll = ll[-2:] + [p['x']*scale + scr_x, -p['y']*scale + scr_y]
             else:
                 ll.append(p['x']*scale + scr_x)
@@ -314,7 +330,8 @@ class Trajectory(object):
             prev_col = col
             prev = p
         #остатки
-        canvas.create_line(ll,  fill=col,  width=2, arrow = LAST, arrowshape = (10, 15, 3))
+        if len(ll) > 0:
+            canvas.create_line(ll,  fill=col,  width=1, arrow = LAST, arrowshape = (10, 15, 3))
 
 if __name__ == '__main__':
     from meta import *

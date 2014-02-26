@@ -113,8 +113,8 @@ class Segment:
                 возвращает [p1, center, p2], готовое для скармливания get_line_for_arc '''
         a1 = get_angle(p1, c, p1, Point(p1.x + 100, p1.y))
         a2 = get_angle(p1, c, c, p2)
-        rr1 = self.__get_border(p1, c, r)
-        rr2 = self.__get_border(c, p2, r)
+        rr1 = get_border(p1, c, r)
+        rr2 = get_border(c, p2, r)
 
         if a2 > pi:
             cr = get_cross_point(rr1[2], rr1[3], rr2[2], rr2[3])
@@ -137,8 +137,8 @@ class Segment:
         #print p2
         a1 = get_angle(p1, c, p1, Point(p1.x + 100, p1.y))
         a2 = get_angle(p1, c, c, p2)
-        rr1 = self.__get_border(p1, c, r)
-        rr2 = self.__get_border(c, p2, r)
+        rr1 = get_border(p1, c, r)
+        rr2 = get_border(c, p2, r)
         
         if a2 <= pi:
             cr = get_cross_point(rr1[2], rr1[3], rr2[2], rr2[3])
@@ -149,14 +149,7 @@ class Segment:
 
         return cr
 
-    def __get_border(self, p1, p2, w):
-        'возвращает координаты прямоугольника, описанного вокруг отрезка'
-        angle = get_angle(p1, Point(p1.x + 10, p1.y), p1, p2)
-        r1 = Point(p1.x - w*sin(angle), p1.y + w*cos(angle))
-        r2 = Point(p2.x - w*sin(angle), p2.y + w*cos(angle))
-        r3 = Point(p2.x + w*sin(angle), p2.y - w*cos(angle))
-        r4 = Point(p1.x + w*sin(angle), p1.y - w*cos(angle))
-        return (r1, r2, r3, r4)
+
 
     def to_gcode(self):
         ll = self.to_points()
@@ -378,10 +371,10 @@ class Test(Text):
 if __name__ == '__main__':
     v = Meta()
 
-    v.point(0, 0, corner=10)
-    v.point(0, 100, corner=10)
-    v.point(100, 100, corner=10)
-    v.point(100, 0, corner=10)
+    v.point(0, 0)
+    v.point(0, 100)
+    v.point(100, 100)
+    v.point(100, 0)
 
     #v.jump_point(20, [10, 60])
 

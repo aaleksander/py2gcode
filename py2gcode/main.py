@@ -63,14 +63,13 @@ def preview(function):
 	'выводит на экран траекторию работы программы'
 	Viewer3D(function).show()
 
-def preview2D(trajectoryes,  scale):
+def preview2D(trajectoryes,  scale, options = None):
 	'выводит на экран траекторию работы программы'
-	Viewer2D(trajectoryes,  scale).show()
+	Viewer2D(trajectoryes,  scale, options).show()
 
 def path(com, str):
 	'''путь на микроязыке'''
 	pass
-
 
 #всякие команды
 def G0(X = None, Y = None, Z = None): 

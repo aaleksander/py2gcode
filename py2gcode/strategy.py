@@ -8,7 +8,7 @@ from geometry import *
 default_safeZ = 5
 
 #базовый класс, генерирующий Г-код для одной траектории. Так же уже умеет вырезать по контуру
-class Strategy:
+class Strategy(object):
     def __init__(self):
         pass    
 

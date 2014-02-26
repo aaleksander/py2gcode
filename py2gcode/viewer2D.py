@@ -13,9 +13,9 @@ from cnc import *
 
 class Viewer2D:
     'Просмотрщик'
-    def __init__(self,  trajectoryes,  scale):
+    def __init__(self,  trajectoryes,  scale, options=None):
         'задаем на вход массив траекторий'
-        
+        self.options = options
         #возможность принимать на вход не массив, а одинокую траекторию
         if isinstance(trajectoryes, list):
             self._trajectoryes = trajectoryes
@@ -105,4 +105,4 @@ class Viewer2D:
         self.c.create_line(self.scroll_x,  0,  self.scroll_x, 1000,   fill="white",  width=1)
 
         for t in self._trajectoryes:
-            t.draw(self.c,  self.scroll_x,  self.scroll_y,  self._zoom)
+            t.draw(self.c,  self.scroll_x,  self.scroll_y,  self._zoom, self.options)

@@ -59,15 +59,14 @@ class SvgTrajectory(Trajectory):
                 begin = None
                 ok = True
 
-            if ok == False:
-                print c
+            #if ok == False:
+            #    print c
 
             curr_x = x
             curr_y = y
             self.points += path
         self.update_offsets()
         #print self.points
-
 
     def __curve(self, command, x, y):
         com = command['com']
@@ -76,32 +75,30 @@ class SvgTrajectory(Trajectory):
         cx, cy = x, y
         prev = (x, y)
 
-        ts = [t/10.0 for t in range(11)]
+        ts = [t/20.0 for t in range(21)]
         d = 3
 
-        if com == 'c':
-            while len(params) >=3:
-                #берем три точки кривой                
-                xys  = params[:3]
-                #к каждой точке прибавляем абсолютное значение
+        while len(params) >=3:
+            #берем три точки кривой
+            xys  = params[:3]
+            #к каждой точке прибавляем абсолютное значение
+            if com == 'c':
                 xys = map(lambda (_x, _y): (_x + cx, _y + cy), xys)
-                #в начало гладем абсолютное значение
-                xys = [prev] + xys
-                #генерим траеторию
+            #в начало гладем абсолютное значение
+            xys = [prev] + xys
+            #генерим траеторию
 
-                bezier = make_bezier(xys)
-                points = bezier(ts)
-                for xx, yy in points:
-                    path.append({'x': xx, 'y': yy})
+            bezier = make_bezier(xys)
+            points = bezier(ts)
+            for xx, yy in points:
+                path.append({'x': xx, 'y': yy})
 
-                #path.append({'x': xx, 'y': yy})               
-
-                xx, yy = xys[3]
-                prev = (xx, yy)
-                #новые абсолютные значения
-                cx = xx
-                cy = yy
-                params = params[3:]
+            xx, yy = xys[3]
+            prev = (xx, yy)
+            #новые абсолютные значения
+            cx = xx
+            cy = yy
+            params = params[3:]
 
         return path, cx, cy
 
@@ -131,7 +128,6 @@ class SvgTrajectory(Trajectory):
             else:
                 xx, yy = params[0] 
                 res = [{'x': xx, 'y': yy}]
-                
 
         #дано несколько координат
         for p in params[1:]:
@@ -204,6 +200,7 @@ if __name__ == '__main__':
     _sch.jump_point(5, [14, 41, 68, 93])'''
 
     _p = SvgTrajectory(str)
+    _p.to_zero()
     #_p.jump_point(5, [14, 41, 68, 93])
     preview2D([_p], 8)
 
