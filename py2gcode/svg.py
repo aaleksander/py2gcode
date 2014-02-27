@@ -75,7 +75,7 @@ class SvgTrajectory(Trajectory):
         cx, cy = x, y
         prev = (x, y)
 
-        ts = [t/20.0 for t in range(21)]
+        ts = [t/10.0 for t in range(11)]
         d = 3
 
         while len(params) >=3:

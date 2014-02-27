@@ -2,6 +2,7 @@
 
 from main import *
 from math import sqrt
+from geometry import *
 
 def get_xx_yy_len(p1,  p2):    
     x1 = p1['x']
@@ -247,11 +248,18 @@ class Trajectory(object):
             prev = p
             i += 1
         #выдаем точки по одной
+        prev = None
         for p in list:
+            pp = Point(p['x'], p['y'])
+            if prev != None:
+                if dist(prev, pp) < 0.001:
+                    continue
             if 'type' in p.keys() and p['type'] in ['stop',  'between']:
                 yield {'type': 'j',  'x': p['x'],  'y': p['y']} #перемычка
             else:
                 yield {'type': 'f',  'x': p['x'],  'y': p['y']} #обычный пробег
+                
+            prev = pp
 
     def update_offsets(self):
          #дополним каждую точку смещением, чтобы легче было считать перемычки

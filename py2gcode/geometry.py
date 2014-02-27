@@ -93,6 +93,7 @@ def contact_lines(c1, c2):
         d = z - r*r;
         if (d < -eps):
             return None
+            
         d = sqrt (abs (d));
 
         a = (c.x * r + c.y * d) / z;
