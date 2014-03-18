@@ -79,7 +79,7 @@ def fishka_guns(x, y, z1, z2):
 
 def gen_xy():
     'генератор позиций для фишек'
-    for x in xrange(20, 70, 34):
+    for x in xrange(20, 100, 34):
         for y in xrange(20, 70, 34):
                 yield x, y
 
@@ -107,5 +107,5 @@ def f2():
 
 print("g21 g64 g90")
 
-preview(f1)
-#export(f)
+#preview(f2)
+export(f2)
