@@ -4,7 +4,6 @@ from geometry import *
 from math import cos, sin
 from main import *
 from trajectory import *
-from strategy import *
 
 #построение мета-траекторий, т.е. замкнутых траекторий на основе каких-то опорных точек и с помощью "эластичной ленты" вокруг всех точек
 '''
@@ -372,7 +371,7 @@ if __name__ == '__main__':
     v = Meta()
 
     v.point(0, 0)
-    v.point(0, 100)
+    v.point(0, 100, rounding=10)
     v.point(100, 100)
     v.point(100, 0)
 
@@ -382,9 +381,9 @@ if __name__ == '__main__':
 
     def f():
         G0(0, 0, 15)
-        cut = Strategy()
+        mill(v)
         #vv = cut.offset(3)
-        v.to_gcode(-8, -5)
+        #v.to_gcode(-8, -5)
         
 
     preview(f)

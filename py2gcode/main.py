@@ -4,7 +4,6 @@ from cnc import *
 from viewer3D import *
 from viewer2D import *
 
-
 __cnc__ = CNC()
 
 def clearCNC():
@@ -89,4 +88,50 @@ def G1(X = None, Y = None, Z = None, F=None):
 def F(value):
     __cnc__.F(value)
 
-    #print "F ", value
+def get_option(options, key, default):
+    'берет из словаря какое-то значение по ключу, либо возвращает значение по умолчанию'
+    if options == None:
+        return default
+    if not key in options:
+        return default
+    return options[key]
+
+def mill(traj, z_start=0, z_stop=None, z_step = 1, FF=3000, FZ=200, options=None):
+    'вырезаем траекторию'
+    from strategy import Strategy
+    from tool import Tool
+    cut = Strategy()
+    t = Tool()
+    t.F = FF
+    t.FZ = FZ
+    #берем опции
+    xx = get_option(options, 'x', 0)
+    yy = get_option(options, 'y', 0)
+    sc = get_option(options, 'scale', 1)
+    ang = get_option(options, 'angle', 0)
+
+    if z_stop == None: #просто один слой там, где скажут
+        cut.mill(traj, tool=t, x=xx, y=yy, scale=sc, angle=ang, options=options)
+        return
+
+    opt = options.copy()
+    z = z_start
+    while z >= z_stop:
+        opt['z'] = z
+        cut.mill(traj, tool=t, x=xx, y=yy, scale=sc, angle=ang, options=opt)        
+        z -= z_step
+
+    if z + z_step > z_stop: #дорезаем остатки
+        opt['z'] = z_stop
+        cut.mill(traj, tool=t, x=xx, y=yy, scale=sc, angle=ang, options=opt)        
+
+def mill_offset(traj, off = 3, z_start=0, z_stop=None, z_step = 1, FF=3000, FZ=200, options=None):
+    from offset import Offset
+    new_tr = Offset(traj, off)
+    mill(new_tr, z_start, z_stop, z_step, FF, FZ, options)
+    
+    
+    
+    
+    
+    

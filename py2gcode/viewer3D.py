@@ -5,7 +5,6 @@
 from Tkinter import *
 from cnc import *
 from math import cos, sin
-import main
 from cnc import *
 
 '''
@@ -59,7 +58,6 @@ class Point_v:
 class Viewer3D:
     'Просмотрщик'
     def __init__(self, function):
-
         self.function = function #функция, результат которой надо визуализировать
         #последние мышиные координаты
         self.last_x = -1
@@ -95,8 +93,10 @@ class Viewer3D:
         #добавляем в сцену кубик
         s = 90
 
-        #получаем список команд
-        comm = main.programm(function)
+        #получаем список команд        
+        from main import programm
+        comm = programm(function)
+        
         #print comm
         #обработка разных команд
         lx = None
@@ -267,17 +267,19 @@ class Viewer3D:
         return Point_v(sx, sy, 0, p.Type)
 
 def go_home():
-	G0(X=0, Y=0, Z=0)
+    from main import G0
+    G0(X=0, Y=0, Z=0)
 
 def f():
-	go_home()
-	G1(Z=10)
-	G1(X=50)
-	G1(Y=30)
-	G1(X=0)
-	G1(Y=0)
-	G1(Z=0)
-	go_home()
+    from main import G1
+    go_home()
+    G1(Z=10)
+    G1(X=50)
+    G1(Y=30)
+    G1(X=0)
+    G1(Y=0)
+    G1(Z=0)
+    go_home()
 
 #export(f, 'test.nc')
 

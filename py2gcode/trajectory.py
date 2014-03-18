@@ -14,11 +14,11 @@ def get_xx_yy_len(p1,  p2):
 
 def get_len(p1,  p2):
     x1,  y1,  x2,  y2,  l = get_xx_yy_len(p1,  p2)
-    return l
-    
-    
-def get_from_ring(l, i, off):
+    return l    
+
+def get_from_ring(l, i, off, func=None):
     'возвращает сегмент из массива l как будто это кольцевой список, i-позиция, off - смещение относительно этой позиции'
+    #func - некая функция преобразования
     o = i + off
     if o >= len(l):
         while o >= len(l):
@@ -27,10 +27,15 @@ def get_from_ring(l, i, off):
         if o < 0:
             while i<0:
                 o += len(l)
-    return l[o]
+    
+    if func == None:
+        return l[o]
+    else:
+        return func(l[o])
 
 class Trajectory(object):
     def __init__(self):
+        #TODO: передалать, чтобы были не словарики, а конкретные объекты с G1, G2, G3
         self.points = [] #это уже готовые точки, по которым пойдет фреза. Словарик вида {x, y}
         self.jump_points = []
 
@@ -110,11 +115,11 @@ class Trajectory(object):
             self.create_trajectory()
             
         x0, y0 = self.points[0]['x'], self.points[0]['y']
-        
+
         for p in self.points:
             p['x'] -= x0
             p['y'] -= y0
-        
+
         return x0, y0
 
     def mirror_y(selfm, center=0):
@@ -296,15 +301,9 @@ class Trajectory(object):
 
         return res
 
-    def __get_option(self, options, key, default):
-        if options == None:
-            return default
-        if not key in options:
-            return default
-        return options[key]
 
     def draw(self,  canvas,  scr_x, scr_y,  scale, options=None):
-        if self.__get_option(options, 'hideRef', True) == False:
+        if main.get_option(options, 'hideRef', True) == False:
             self.draw_points(canvas,  scr_x,  scr_y,  scale) #рисуем опорные точки
         #расчитаем траекторию и перемычки
         self.create_trajectory()
@@ -344,14 +343,18 @@ class Trajectory(object):
 if __name__ == '__main__':
     from meta import *
     v = Meta()
-
-    v.point(0, 0,  rounding=5)
+    v.point(0, 0, rounding=10)
+    v.point(100, 0)
+    v.point(100, 100)
+    v.point(0, 100)
+    '''
+    v.point(0, 0,  radius=5)
     v.point(50, 0,  rounding=5)
     v.point(50, 20)
     v.point(40, 30)
     v.point(50, 100,  rounding=5)    
     v.point(0, 100,  rounding=5) 
-    v.point(-50,  50,  radius=-60)        
+    v.point(-50,  50,  radius=-60)'''
 
 
 #TODO: добавить возможность ставить перемычку на 0
@@ -375,5 +378,5 @@ if __name__ == '__main__':
             z -= 1
         G0(Z=5)
 
-#    preview(f)
+    preview(f)
     #export(f)

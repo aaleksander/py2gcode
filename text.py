@@ -10,7 +10,6 @@ def f():
     t = TextTrajectory(font, "Проба текста")
     t.grav(0, 0, 0, sz, 500, 2.8) #0.4
     G0(Z=sz)
-    #G0(0, 0)
 
-preview(f)
+#preview(f)
 export(f)

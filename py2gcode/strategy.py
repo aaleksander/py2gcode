@@ -11,53 +11,23 @@ default_safeZ = 5
 class Strategy(object):
     def __init__(self):
         pass    
-
-    def offset(self, t, value):
-        '''возвращает новую траекторию с новым путем
-        t - траектория, value - на сколько надо сделать смещение. Плюс - наружу, минус - внутрь.
-        '''
-        if len(t.points) == 0:
-            t.create_trajectory()
-        res = Trajectory()
-        i = 0
-        while i < len(t.points):
-            s = Point(t.points[i]['x'], t.points[i]['y'])
-            s_prev = get_from_ring(t.refPoints, i, -1)
-            s_prev = Point(s_prev['x'], s_prev['y'])
-            s_past = get_from_ring(t.refPoints, i, 1)
-            s_past = Point(s_past['x'], s_past['y'])
-            
-            res.points.append({'x': s.x + value, 'y': s.y + value})
-
-            zero = Point(s.x + 100, s.y)
-            a = get_angle(s_prev, s, s, s_past)
-            a = a*180/3.14159265358979323
-            if a > 180: #внутренний угол
-                pass
-                #print s, a
-                #newP['radius'] = value
-
-            #res.refPoints.append(newP)
-            i += 1
-        res.update_offsets()
-        return res
-
-    def cut_on_line(self, trajectory, z_start, z_stop, z_step, z_safe, tool, options=None):
-        '''вырезает по средней линии
-            z_start - глубина первого прохода
-            z_stop - глубина последнего прохода
-            z_step -  с каким шагом заглубляться
-            tool - каким инструментом
-            options - всякие опции
-            если есть перемычки, то их толщина будет 1.5 мм
-        '''
+    
+    '''def cut_on_line(self, trajectory, z_start, z_stop, z_step, z_safe, tool, options=None):
+        #вырезает по средней линии
+        #    z_start - глубина первого прохода
+        #    z_stop - глубина последнего прохода
+        #    z_step -  с каким шагом заглубляться
+        #    tool - каким инструментом
+        #    options - всякие опции
+        #    если есть перемычки, то их толщина будет 1.5 мм
+        
         trajectory.create_trajectory
         G0(Z = z_safe)
             
         z = z_start
         while z >= z_stop:
             self.__one_z_level(trajectory, tool, z, z_stop + 1.5)
-            z -= z_step
+            z -= z_step'''
             
     def get_xy(self, x, y, scale, angle):
         'возвращает функцию, которая пересчитывает координаты в зависимости от всех параметров'
@@ -73,20 +43,18 @@ class Strategy(object):
     def mill(self, tr, tool=Tool(), x=0, y=0, scale=1, angle=None, options={}):
         'режем без всяких перемычек и прочего'
         #если задан угол, то поворачиваем
-        if 'safeZ' in options:
-            safeZ = options['safeZ']
-        else:
-            safeZ = default_safeZ
+        safeZ = main.get_option(options, 'safeZ', default_safeZ)
         
         xy = self.get_xy(x, y, scale, angle)
         fx, fy = tr.get_first_position()
         fx, fy = xy(fx, fy)
         G0(Z=safeZ)
         G0(fx, fy)
-        if 'z' in options:
+        zz = get_option(options, 'z', None)
+        if zz != None:
             #погружаемся
             F(tool.FZ)
-            G1(Z=options['z'])
+            G1(Z=zz)
         F(tool.F)
         points = tr.get_next_point() 
         points.next()  #первую точку пропускаем, мы взяли ее с помощью get_first_position

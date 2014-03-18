@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project py2gcode -->
-<!-- Saved: 2014-02-25, 18:02:05 -->
+<!-- Saved: 2014-03-14, 17:55:45 -->
 <!-- Copyright (C) 2014 ,  -->
 <Project version="4.6">
   <Language>en</Language>
@@ -25,7 +25,6 @@
     <Source>py2gcode/geometry.py</Source>
     <Source>py2gcode/main.py</Source>
     <Source>py2gcode/meta.py</Source>
-    <Source>py2gcode/py2gcode.py</Source>
     <Source>py2gcode/utils.py</Source>
     <Source>py2gcode/__init__.py</Source>
     <Source>py2gcode/trajectory.py</Source>
@@ -41,6 +40,7 @@
     <Source>py2gcode/Fonts/__init__.py</Source>
     <Source>phishka.py</Source>
     <Source>text.py</Source>
+    <Source>py2gcode/offset.py</Source>
   </Sources>
   <Forms>
   </Forms>
