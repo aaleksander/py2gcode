@@ -228,6 +228,14 @@ def get_cross_point(p11, p12, p21, p22):
 
     res = Point(p11.x + (p12.x - p11.x) * Ub, p11.y + (p12.y - p11.y) * Ub)
     return res
+    
+def is_cross(p11, p12, p21, p22):
+    'возрващает True, если отрезки пересекаются'
+    p = get_cross_point(p11, p12, p21, p22)
+    if p == None:
+        return False
+    return (((p11.x<=p.x) and (p12.x>=p.x) and (p21.x <= p.x) and (p22.x >= p.x))
+        or((p11.y <= p.y) and (p12.y >= p.y) and (p21.y <= p.y) and (p22.y >= p.y))) 
 
 def get_border(p1, p2, w):
     'возвращает координаты прямоугольника, описанного вокруг отрезка'

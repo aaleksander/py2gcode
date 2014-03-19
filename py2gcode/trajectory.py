@@ -306,7 +306,8 @@ class Trajectory(object):
         if main.get_option(options, 'hideRef', True) == False:
             self.draw_points(canvas,  scr_x,  scr_y,  scale) #рисуем опорные точки
         #расчитаем траекторию и перемычки
-        self.create_trajectory()
+        if len(self.points) == 0:
+            self.create_trajectory()
         #рисуем
         prev = None
         ll = []
@@ -340,13 +341,56 @@ class Trajectory(object):
         if len(ll) > 0:
             canvas.create_line(ll,  fill=col,  width=1, arrow = LAST, arrowshape = (10, 15, 3))
 
+    def segments(self, func=None):
+        'генератор для списка сегментов'
+        def id(x): return x
+        if func == None:
+            f = id
+        else:
+            f = func
+
+        if len(self.points) == 0:
+            self.create_trajectory()
+
+        prev = f(self.points[0])
+
+        for p in self.points[1:]:
+            fp = f(p)
+            yield (prev, fp)
+            prev = fp
+            
+    def add_point_after(self, p_add, p_after):
+        '''Добавить точка p_add после p_after
+        p_add, p_after - Point'''
+        #ищем точку p_after
+        i = 0
+        while i < len(self.points):
+            if p_after.x == self.points[i]['x'] and p_after.y == self.points[i]['y']:
+                #нашли нужную точку
+                self.points.insert(i, {'x': p_add.x, 'y': p_add.y})
+                break
+            i += 1
+        
+    def orientation(self):
+        'true - по часовой стрелке, иначе - против'
+        s = 0
+        for p1, p2 in self.segments():
+            s += (p2['x'] - p1['x'])*(p2['y'] + p1['y'])
+            
+        return s > 0
+        
+        
 if __name__ == '__main__':
     from meta import *
     v = Meta()
-    v.point(0, 0, rounding=10)
+    v.point(0, 0)
     v.point(100, 0)
     v.point(100, 100)
     v.point(0, 100)
+
+
+    print v.orientation()
+    
     '''
     v.point(0, 0,  radius=5)
     v.point(50, 0,  rounding=5)
@@ -378,5 +422,11 @@ if __name__ == '__main__':
             z -= 1
         G0(Z=5)
 
-    preview(f)
+    #preview(f)
     #export(f)
+    
+    def to_point(dict):
+        return Point(dict['x'], dict['y'])
+        
+    for p1, p2 in v.segments(to_point):
+        print p1, p2
