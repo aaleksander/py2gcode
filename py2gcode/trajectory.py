@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from main import *
 from math import sqrt
@@ -122,7 +123,7 @@ class Trajectory(object):
 
         return x0, y0
 
-    def mirror_y(selfm, center=0):
+    def mirror_y(self, center=0):
         'отразить по y'
         if len(self.points) == 0:
             self.create_trajectory()
@@ -130,7 +131,7 @@ class Trajectory(object):
         for p in self.points:
             p['y'] = center - p['y']
             
-    def mirror_x(selfm, center=0):
+    def mirror_x(self, center=0):
         'отразить по x'
         if len(self.points) == 0:
             self.create_trajectory()

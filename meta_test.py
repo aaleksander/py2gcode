@@ -27,6 +27,8 @@ def f():
     x,  y =  v2.get_first_position()
     G0(x, y)    
     z = -3
+    
+    v2.mirror_y()
     while z > -10:
         G1(Z=z)
         v2.to_gcode(z, -8)
