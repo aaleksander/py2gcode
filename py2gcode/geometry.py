@@ -11,6 +11,9 @@ IN_CIRCLE 	= 0
 ON_CIRCLE 	= 1
 OUT_CIRCLE 	= 2
 
+def to_point(dict):
+    return Point(dict['x'], dict['y'])
+
 class Point:
 	def __init__(self, x, y):
 		self.x = x;
@@ -211,9 +214,15 @@ def get_angle(p11, p12, p21, p22):
 
 def get_cross_point(p11, p12, p21, p22):
     'возвращает точку пересечения двух отрезков'
-    Z  = (p12.y-p11.y)*(p21.x-p22.x)-(p21.y-p22.y)*(p12.x-p11.x)
-    Ca = (p12.y-p11.y)*(p21.x-p11.x)-(p21.y-p11.y)*(p12.x-p11.x)
-    Cb = (p21.y-p11.y)*(p21.x-p22.x)-(p21.y-p22.y)*(p21.x-p11.x)
+    # +0.0 делаем, чтобы преобразовать в double
+    x1, y1 = p11.x + 0.0, p11.y + 0.0
+    x2, y2 = p12.x + 0.0, p12.y + 0.0
+    x3, y3 = p21.x + 0.0, p21.y + 0.0
+    x4, y4 = p22.x + 0.0, p22.y + 0.0
+    
+    Z  = (y2-y1)*(x3-x4)-(y3-y4)*(x2-x1)
+    Ca = (y2-y1)*(x3-x1)-(y3-y1)*(x2-x1)
+    Cb = (y3-y1)*(x3-x4)-(y3-y4)*(x3-x1)
 
     #прямые совпадают
     if Z == 0 and Ca == 0 and Cb == 0:
@@ -226,16 +235,58 @@ def get_cross_point(p11, p12, p21, p22):
     Ua = Ca/Z
     Ub = Cb/Z
 
-    res = Point(p11.x + (p12.x - p11.x) * Ub, p11.y + (p12.y - p11.y) * Ub)
-    return res
+    return Point(x1 + (x2 - x1) * Ub, y1 + (y2 - y1) * Ub)
     
 def is_cross(p11, p12, p21, p22):
     'возрващает True, если отрезки пересекаются'
-    p = get_cross_point(p11, p12, p21, p22)
-    if p == None:
-        return False
-    return (((p11.x<=p.x) and (p12.x>=p.x) and (p21.x <= p.x) and (p22.x >= p.x))
-        or((p11.y <= p.y) and (p12.y >= p.y) and (p21.y <= p.y) and (p22.y >= p.y))) 
+    
+    # +0.0 делаем, чтобы преобразовать в double
+    x11, y11 = p11.x + 0.0, p11.y + 0.0
+    x12, y12 = p12.x + 0.0, p12.y + 0.0
+    x21, y21 = p21.x + 0.0, p21.y + 0.0
+    x22, y22 = p22.x + 0.0, p22.y + 0.0    
+    
+    maxx1 = max(x11, x12)
+    maxy1 = max(y11, y12)
+    minx1 = min(x11, x12)
+    miny1 = min(y11, y12)
+    maxx2 = max(x21, x22)
+    maxy2 = max(y21, y22)
+    minx2 = min(x21, x22)
+    miny2 = min(y21, y22)
+
+    if minx1 > maxx2 or maxx1 < minx2 or miny1 > maxy2 or maxy1 < miny2:
+        return False  # Момент, када линии имеют одну общую вершину...
+ 
+    dx1, dy1 = x12-x11, y12-y11 # Длина проекций первой линии на ось x и y
+    dx2, dy2 = x22-x21, y22-y21 # Длина проекций второй линии на ось x и y
+    dxx, dyy = x11-x21, y11-y21;
+    ddiv = dy2*dx1 - dx2*dy1
+    
+    mmul = dx1*dyy - dy1*dxx
+
+    if ddiv == 0: #Линии параллельны...
+        if x11 == x21 and x12 == x22 and y11 == y21 and y12 == y22:
+            return True #совпадают 
+        else:
+            return False #не совпадают
+    if ddiv > 0:
+        mmul = dx1*dyy - dy1*dxx
+        if mmul < 0 or mmul > ddiv:
+            return False # Первый отрезок пересекается за своими границами...
+        mmul = dx2*dyy - dy2*dxx
+        if mmul < 0 or mmul > ddiv:
+            return False # Второй отрезок пересекается за своими границами...
+    
+    mmul = -(dx1*dyy - dy1*dxx)
+    if mmul < 0 or mmul > -ddiv:
+        return False # Первый отрезок пересекается за своими границами...
+    
+    mmul = -(dx2*dyy - dy2*dxx)
+    if mmul < 0 or mmul > -ddiv:
+        return False # Второй отрезок пересекается за своими границами...
+
+    return True
 
 def get_border(p1, p2, w):
     'возвращает координаты прямоугольника, описанного вокруг отрезка'
@@ -245,3 +296,36 @@ def get_border(p1, p2, w):
     r3 = Point(p2.x + w*sin(angle), p2.y - w*cos(angle))
     r4 = Point(p1.x + w*sin(angle), p1.y - w*cos(angle))
     return (r1, r2, r3, r4)
+
+import unittest
+
+class TestCliper(unittest.TestCase):    
+    def test_is_cross(self):
+        p1 = Point(0, 0)
+        p2 = Point(10, 10)
+        p3 = Point(0, 10)
+        p4 = Point(10, 0)
+        self.assertTrue(is_cross(p1, p2, p3, p4), "Неправильно определил факт пересечения")        
+        p = get_cross_point(p1, p2, p3, p4)
+        self.assertTrue(p.x == 5.0, 'неверно определи координату Х пересечения')
+        self.assertTrue(p.y == 5.0, 'неверно определи координату Y пересечения')
+        
+    def test_vertex_on_line(self):
+        p1, p2 = Point(0, 0), Point(20, 0)
+        p3, p4 = Point(10, 10), Point(10, 0) #эта линия лежит одной вершиной на p1, p2
+
+        self.assertTrue(is_cross(p1, p2, p3, p4), 'неверно определил факт пересечения')
+        p = get_cross_point(p1, p2, p3, p4)
+        self.assertTrue(p.x == 10.0, 'неверно Х')
+        self.assertTrue(p.y == 0.0, 'неверно Y')
+        
+    def test_sovpadaut(self):
+        p1, p2 = Point(0, 0), Point(10, 10)
+        p3, p4 = Point(0, 0), Point(10, 10)
+        p5, p6 = Point(0, 10), Point(10, 20) #параллельна p1-p2
+        self.assertTrue(is_cross(p1, p2, p3, p4))
+        self.assertFalse(is_cross(p1, p2, p5, p6)) #параллельные
+        self.assertTrue(get_cross_point(p1, p2, p3, p4) == None)
+
+if __name__ == '__main__':
+    unittest.main()

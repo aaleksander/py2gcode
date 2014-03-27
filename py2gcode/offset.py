@@ -11,8 +11,7 @@ from clipper import *
 
 default_safeZ = 5
 
-def to_point(dict):
-    return Point(dict['x'], dict['y'])
+
 
 class Offset(Meta):
     def __init__(self, t, offset, limit=0.05):#, x_start, y_start):
@@ -123,14 +122,10 @@ class Offset(Meta):
         #ищем пересекающиеся сегменты        
         newp = []
         for p11, p12 in self.segments(to_point):
-            print "start"
             for p21, p22 in self.segments(to_point):
-                print p11, p12, "\t", p21, p22,
                 if p11.x == p21.x and p12.x == p22.x and p11.y == p21.y and p12.y == p22.y: #совпадают                    
-                    print "skip"
                     continue
                 if (p12.x == p21.x and p12.y == p21.y) or (p22.x == p11.x and p22.y == p11.y): #совпадают
-                    print "skip"
                     continue
 
                 if is_cross(p11, p12, p21, p22):
@@ -138,9 +133,8 @@ class Offset(Meta):
                     p = get_cross_point(p11, p12, p21, p22)
 
                     #newp.append({'x': p.x, 'y': p.y, 'off': 0, 'after':  (p11, p21)})
-                    print "add: ", p
                 else:
-                    print "ok"    
+                    pass
         #self.points += newp
 
 

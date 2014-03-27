@@ -4,7 +4,6 @@ from py2gcode import *
 import unittest
 
 
-
 class TestGCodes(unittest.TestCase):
     def setUp(self):
         pass
