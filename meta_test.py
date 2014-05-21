@@ -10,14 +10,15 @@ v.point(60, 10,  radius=5)
 v.point(65, 40)
 v.point(20, 40,  rounding=3)
 
-v.jump_point(5, [15, 50, 70])
+#v.jump_point(5, [15, 50, 70])
 #preview2D(v, 8)
 
 v2 = Meta()
 v2.point(30, 32, radius=3)
 v2.point(50, 32, radius=5)
 v2.jump_point(5, [15, 65])
-preview2D([v, v2], 8)
+
+preview2D([v], 8, options={'hideRef': False})
 
 def f():
     G0(0, 0, 5)
@@ -25,7 +26,7 @@ def f():
     F(1000)
 
     x,  y =  v2.get_first_position()
-    G0(x, y)    
+    G0(x, y)
     z = -3
     
     v2.mirror_y()

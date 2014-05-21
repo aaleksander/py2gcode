@@ -94,7 +94,7 @@ def f1():
     tool = Tool()
     size=0.12
     for x, y in gen_xy():
-        for t in _ch.trajectories:       
+        for t in _ch.trajectories:
             cutter.grav(t['svg'], tool, x, y, -1, size)
             up()
         #cut(x, y, -10, 28)
@@ -105,7 +105,7 @@ def f2():
     for x, y in gen_xy():
         cut(x, y, -10, 28)
 
-print("g21 g64 g90")
+#print("g21 g64 g90")
 
 preview(f1)
 #export(f)

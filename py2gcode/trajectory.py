@@ -425,9 +425,9 @@ if __name__ == '__main__':
 
     #preview(f)
     #export(f)
-    
+
     def to_point(dict):
         return Point(dict['x'], dict['y'])
-        
+
     for p1, p2 in v.segments(to_point):
         print p1, p2

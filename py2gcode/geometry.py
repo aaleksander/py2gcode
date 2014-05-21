@@ -57,7 +57,8 @@ class Line:
             self.c = -self.a*p1.x - self.b*p1.y
 
     def __str__(self):
-        return "Line(%(a)s, %(b)s, %(c)s)" % {'a': self.a, 'b': self.b, 'c': self.c}
+        return "Line(%(a)s, %(b)s, %(c)s, %(p1)s, %(p2)s)" % {'a': self.a, 'b': self.b, 'c': self.c, 
+            'p1': self.p1, 'p2': self.p2}
 
 
     def init_p1(self, x):
@@ -107,6 +108,7 @@ def contact_lines(c1, c2):
     res = []
     for i in xrange(-1, 2, 2):
         for j in xrange(-1, 2, 2):
+            print i, j
             l = tangents (c2.c - c1.c, c1.r*i, c2.r*j)
             if l != None:
                 res.append(l)
@@ -114,12 +116,14 @@ def contact_lines(c1, c2):
         l.c -= (l.a * c1.c.x + l.b * c1.c.y);
 
     #теперь найдем точки пересечения этих касательных с окружностями
+
     for l in res:
         pp = cross_line_circle(l, c1)
         l.p1 = pp[0]
         pp = cross_line_circle(l, c2)
         l.p2 = pp[0]
     return res
+
 
 
 def dist(a, b):
@@ -328,4 +332,6 @@ class TestCliper(unittest.TestCase):
         self.assertTrue(get_cross_point(p1, p2, p3, p4) == None)
 
 if __name__ == '__main__':
-    unittest.main()
+    for l in contact_lines (Circle(0, 10, 5), Circle(20, 10, 5)):
+        print l
+    #unittest.main()

@@ -3,18 +3,26 @@ import math
 
 from geometry import *
 
-def __get_crossSegment(points, i1, i2):
+def _get_cross_segment(points, i1, i2):
     '''возвращает пару индексов-вершин для линии, которая пересекает линию из вершин points[i1]-points[i2]
     Причем, эта линия самая последняя в списке
     '''
-    return None, None
+    p1, p2 = points[i1], points[i2]
+    tail = points[i2 + 1:] #берем хвостик и переворачиваем
+    tail.reverse()
+    prev = tail[0]
+    i = len(points) - 1
+    for p in tail:
+        if is_cross(p1, p2, prev, p):
+            return i, i + 1
+        prev = p
+        i -= 1
     
+    return None, None    
 
 def simple_polygon(points):
     'получает на вход список точек (словарики x, y) и возвращает список полигонов (список списков словариков)'
     return [points]
-
-
 
 def isSimple(points):
     'возвращает истину, если полигон не пересекает сам себя'    
@@ -61,14 +69,20 @@ class TestCliper(unittest.TestCase):
         self.assertTrue(len(simple_polygon(simplePolygon)) == 1, 'Количество вернувшихся полигонов для простого полигона неверно')
         self.assertTrue(simple_polygon(simple_polygon)[0] == simple_polygon, 'вернули не тот полигон')
         
-    def test_oneCrossPolygon(self):
+
+    def _test_oneCrossPolygon(self):
         res = simple_polygon(oneCrossPolygon)
         self.assertTrue(len(res) == 2, 'Количество вернувшихся полигонов для сложного полигона неверно')        
 
     def test_getCrossSegment(self):
-        pass
-        #p1, p2 = __get_crossSegment(
-        #assertTrue
+        p1, p2 = _get_cross_segment(simplePolygon, 0, 1)
+        self.assertTrue(p1 == None)
+        self.assertTrue(p2 == None)
+        
+        p1, p2 = _get_cross_segment(oneCrossPolygon, 0, 1)
+        self.assertTrue(p1 == 2, 'индекс неверный')
+        self.assertTrue(p2 == 0, 'индекс неверный')
+        
 
 if __name__ == '__main__':
     unittest.main()
